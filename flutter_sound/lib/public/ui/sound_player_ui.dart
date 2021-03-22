@@ -664,6 +664,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   Widget _buildDuration() {
     return StreamBuilder<PlaybackDisposition>(
         stream: _localController.stream,
+        initialData: PlaybackDisposition(duration: Duration(seconds: _rectime!), position: Duration(seconds: 0)),
         builder: (context, snapshot) {
           var disposition = snapshot.data!;
           var durationDate = DateTime.fromMillisecondsSinceEpoch(
