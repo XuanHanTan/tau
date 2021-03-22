@@ -355,8 +355,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         //height: 70,
 
         child: Row(children: [
+          _buildDuration(), 
       _buildPlayButton(),
-      _buildDuration(),
+      
       _buildTitle(),
       /*SizedBox(
         height: 49,
@@ -663,7 +664,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   Widget _buildDuration() {
     return StreamBuilder<PlaybackDisposition>(
         stream: _localController.stream,
-        initialData: PlaybackDisposition.zero(),
         builder: (context, snapshot) {
           var disposition = snapshot.data!;
           var durationDate = DateTime.fromMillisecondsSinceEpoch(
