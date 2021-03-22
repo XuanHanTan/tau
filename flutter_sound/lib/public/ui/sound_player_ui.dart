@@ -75,6 +75,7 @@ class SoundPlayerUI extends StatefulWidget {
   final TextStyle? _textStyle;
   final TextStyle? _titleStyle;
   final SliderThemeData? _sliderThemeData;
+  final int? _rectime;
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -106,6 +107,7 @@ class SoundPlayerUI extends StatefulWidget {
     TextStyle? textStyle,
     TextStyle? titleStyle,
     SliderThemeData? sliderThemeData,
+    int? rectime,
   })  : _onLoad = onLoad,
         _showTitle = showTitle,
         _track = null,
@@ -116,7 +118,8 @@ class SoundPlayerUI extends StatefulWidget {
         _disabledIconColor = disabledIconColor,
         _textStyle = textStyle,
         _titleStyle = titleStyle,
-        _sliderThemeData = sliderThemeData;
+        _sliderThemeData = sliderThemeData,
+        _rectime = rectime;
 
   ///
   /// [SoundPlayerUI.fromTrack] Constructs a Playbar with a Track.
@@ -144,6 +147,7 @@ class SoundPlayerUI extends StatefulWidget {
     TextStyle? textStyle,
     TextStyle? titleStyle,
     SliderThemeData? sliderThemeData,
+    int? rectime,
   })  : _track = track,
         _showTitle = showTitle,
         _onLoad = null,
@@ -153,22 +157,21 @@ class SoundPlayerUI extends StatefulWidget {
         _disabledIconColor = disabledIconColor,
         _textStyle = textStyle,
         _titleStyle = titleStyle,
-        _sliderThemeData = sliderThemeData;
+        _sliderThemeData = sliderThemeData,
+        _rectime = rectime;
 
   @override
   State<StatefulWidget> createState() {
-    return SoundPlayerUIState(
-      _track,
-      _onLoad,
-      enabled: _enabled,
-      backgroundColor:
-          (_backgroundColor != null) ? _backgroundColor : Color(0xFFFAF0E6),
-      iconColor: _iconColor,
-      disabledIconColor: _disabledIconColor,
-      textStyle: _textStyle,
-      titleStyle: _titleStyle,
-      sliderThemeData: _sliderThemeData,
-    );
+    return SoundPlayerUIState(_track, _onLoad,
+        enabled: _enabled,
+        backgroundColor:
+            (_backgroundColor != null) ? _backgroundColor : Color(0xFFFAF0E6),
+        iconColor: _iconColor,
+        disabledIconColor: _disabledIconColor,
+        textStyle: _textStyle,
+        titleStyle: _titleStyle,
+        sliderThemeData: _sliderThemeData,
+        rectime: _rectime);
   }
 }
 
@@ -221,18 +224,19 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   final SliderThemeData? _sliderThemeData;
 
+  final int? _rectime;
+
   ///
-  SoundPlayerUIState(
-    this._track,
-    this._onLoad, {
-    bool? enabled,
-    Color? backgroundColor,
-    Color? iconColor,
-    Color? disabledIconColor,
-    TextStyle? textStyle,
-    TextStyle? titleStyle,
-    SliderThemeData? sliderThemeData,
-  })  : _player = FlutterSoundPlayer(),
+  SoundPlayerUIState(this._track, this._onLoad,
+      {bool? enabled,
+      Color? backgroundColor,
+      Color? iconColor,
+      Color? disabledIconColor,
+      TextStyle? textStyle,
+      TextStyle? titleStyle,
+      SliderThemeData? sliderThemeData,
+      int? rectime})
+      : _player = FlutterSoundPlayer(),
         _enabled = enabled,
         _backgroundColor = backgroundColor,
         _iconColor = iconColor,
@@ -240,9 +244,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _textStyle = textStyle,
         _titleStyle = titleStyle,
         _sliderThemeData = sliderThemeData,
+        _rectime = rectime,
         _localController = StreamController<PlaybackDisposition>.broadcast() {
     _sliderPosition.position = Duration(seconds: 0);
-    _sliderPosition.maxPosition = Duration(seconds: 0);
+    _sliderPosition.maxPosition = Duration(seconds: _rectime!);
     if (!_enabled!) {
       __playState = _PlayState.disabled;
     }
@@ -343,36 +348,34 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   Widget _buildPlayBar() {
     var rows = <Widget>[];
-    rows.add(Row(children: [_buildDuration(), _buildSlider()]));
+    rows.add(Row(children: [_buildSlider()]));
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
     return Container(
         //height: 70,
-        decoration: BoxDecoration(
-            color: _backgroundColor,
-            borderRadius: BorderRadius.circular(SoundPlayerUI._barHeight / 2)),
+
         child: Row(children: [
-          SizedBox(
-            width: 20,
+      _buildPlayButton(),
+      _buildDuration(),
+      _buildTitle(),
+      /*SizedBox(
+        height: 49,
+        width: 30,
+        child: InkWell(
+          onTap: _player.isPaused
+              ? resume
+              : _player.isPlaying
+                  ? pause
+                  : null,
+          child: Icon(
+            _player.isPaused ? Icons.play_arrow : Icons.pause,
+            color: _player.isStopped ? _disabledIconColor : Colors.black,
           ),
-          _buildPlayButton(),
-          SizedBox(
-            height: 50,
-            width: 30,
-            child: InkWell(
-              onTap: _player.isPaused
-                  ? resume
-                  : _player.isPlaying
-                      ? pause
-                      : null,
-              child: Icon(
-                _player.isPaused ? Icons.play_arrow : Icons.pause,
-                color: _player.isStopped ? _disabledIconColor : Colors.black,
-              ),
-            ),
-          ),
-          Expanded(child: Column(children: rows))
-        ]));
+        ),
+      ),*/
+      Container(width: 5),
+      Expanded(child: Column(children: rows))
+    ]));
   }
 
   /// Returns the players current state.
@@ -494,20 +497,19 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     /// no track then just silently ignore the start action.
     /// This means that _onLoad returned null and the user
     /// can display appropriate errors.
-      _track = await newTrack;
-      if (_track != null) {
-        _start();
-      } else {
-        _loading = false;
-        _transitioning = false;
-      }
-   }
+    _track = await newTrack;
+    if (_track != null) {
+      _start();
+    } else {
+      _loading = false;
+      _transitioning = false;
+    }
+  }
 
   /// internal start method.
   void _start() async {
     var trck = _track;
     if (trck != null) {
-
       await _player
           .startPlayerFromTrack(trck, whenFinished: _onStopped)
           .then((_) {
@@ -621,8 +623,11 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                     _canPlay = asyncData.data! && !__transitioning;
                   }
 
-                  return InkWell(
-                      onTap: _canPlay &&
+                  return IconButton(
+                      autofocus: true,
+                      padding: EdgeInsets.zero,
+                      splashRadius: 20,
+                      onPressed: _canPlay &&
                               (_playState == _PlayState.stopped ||
                                   _playState == _PlayState.playing ||
                                   _playState == _PlayState.paused)
@@ -630,7 +635,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                               return _onPlay(context);
                             }
                           : null,
-                      child: button);
+                      icon: button!);
                 })));
   }
 
@@ -647,8 +652,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
             if (asyncData.connectionState == ConnectionState.done) {
               canPlay = asyncData.data;
             }
-            return Icon(_player.isStopped ? Icons.play_arrow : Icons.stop,
-                color: canPlay! ? _iconColor : _disabledIconColor);
+            return Icon(_player.isStopped ? Icons.play_arrow : Icons.pause,
+                color: canPlay! ? Colors.white : _disabledIconColor);
           });
     }
     //break;
@@ -668,9 +673,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               disposition.position.inMilliseconds,
               isUtc: true);
           return Text(
-            '${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
-            style: _textStyle,
-          );
+              '${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
+              style: TextStyle(fontSize: 24, fontFamily: "Roboto"));
         });
   }
 
