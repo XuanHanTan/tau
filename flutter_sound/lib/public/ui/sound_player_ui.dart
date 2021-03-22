@@ -688,7 +688,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               isUtc: true);
           return Text(
               '${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
-              style: TextStyle(fontSize: 24, fontFamily: "Roboto"));
+              style: TextStyle(fontSize: 20, fontFamily: "Roboto"));
         });
   }
 
