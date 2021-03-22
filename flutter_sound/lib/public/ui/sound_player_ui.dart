@@ -56,6 +56,7 @@ typedef OnLoad = Future<Track> Function(BuildContext context);
 ///
 /// -----------------------------------------------------------------
 ///
+  Duration? seekPos;
 class SoundPlayerUI extends StatefulWidget {
   /// only codec support by android unless we have a minSdk of 29
   /// then OGG_VORBIS and OPUS are supported.
@@ -225,7 +226,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   final SliderThemeData? _sliderThemeData;
 
   final int? _rectime;
-  Duration? seekPos;
+
   ///
   SoundPlayerUIState(this._track, this._onLoad,
       {bool? enabled,
@@ -849,7 +850,7 @@ class _PlaybarSliderState extends State<PlaybarSlider> {
               var disposition = snapshot.data!;
               return Slider(
                 max: disposition.duration.inMilliseconds.toDouble(),
-                value: disposition.position.inMilliseconds.toDouble(),
+                value: seekPos?.inMilliseconds.toDouble() ?? disposition.position.inMilliseconds.toDouble(),
                 onChanged: (value) =>
                     widget._seek(Duration(milliseconds: value.toInt())),
               );
