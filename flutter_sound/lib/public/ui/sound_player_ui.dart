@@ -225,7 +225,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   final SliderThemeData? _sliderThemeData;
 
   final int? _rectime;
-
+  Duration? seekPos;
   ///
   SoundPlayerUIState(this._track, this._onLoad,
       {bool? enabled,
@@ -294,7 +294,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     return ChangeNotifierProvider<_SliderPosition>(
         create: (_) => _sliderPosition, child: _buildPlayBar());
   }
-
+  
   void _setCallbacks() {
     /// TODO
     /// should we chain these events in case the user of our api
@@ -374,7 +374,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           ),
         ),
       ),*/
-      Container(width: 5),
       Expanded(child: Column(children: rows))
     ]));
   }
@@ -524,6 +523,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _loading = false;
         _transitioning = false;
         Log.d(green('Transitioning = false'));
+        if (seekPos != null){
+          _player.seekToPlayer(seekPos!);
+          setState(() {
+            seekPos = null;
+          });
+        }
       });
     }
   }
@@ -710,6 +715,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _sliderPosition.position = position;
         if (_player.isPlaying || _player.isPaused) {
           _player.seekToPlayer(position);
+        } else {
+          setState(() {
+            seekPos = position;
+          });
         }
       },
       _sliderThemeData,
