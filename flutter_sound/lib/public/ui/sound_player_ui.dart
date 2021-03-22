@@ -524,6 +524,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _transitioning = false;
         Log.d(green('Transitioning = false'));
         if (seekPos != null){
+          Log.d("FS --> seeking to  $seekPos");
           _player.seekToPlayer(seekPos!);
           setState(() {
             seekPos = null;
@@ -716,9 +717,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         if (_player.isPlaying || _player.isPaused) {
           _player.seekToPlayer(position);
         } else {
-          setState(() {
+          WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            setState(() {
             seekPos = position;
           });
+          Log.d("FS --> seek $position");
+           });
         }
       },
       _sliderThemeData,
