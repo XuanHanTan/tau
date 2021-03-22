@@ -612,8 +612,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       button = _buildPlayButtonIcon(button);
     }
     return Container(
-        width: 30,
-        //height: 30,
+        width: 28,
+        height: 28,
         child: Padding(
             padding: EdgeInsets.only(left: 0, right: 0),
             child: FutureBuilder<bool>(
@@ -624,7 +624,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                     _canPlay = asyncData.data! && !__transitioning;
                   }
 
-                  return IconButton(
+                  return Material(
+                     shape: new RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          28.0)),
+                    child: IconButton(
                       autofocus: true,
                       padding: EdgeInsets.zero,
                       splashRadius: 20,
@@ -636,7 +641,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                               return _onPlay(context);
                             }
                           : null,
-                      icon: button!);
+                      icon: button!),);
                 })));
   }
 
