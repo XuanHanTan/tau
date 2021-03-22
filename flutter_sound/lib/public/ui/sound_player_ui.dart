@@ -252,6 +252,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     if (!_enabled!) {
       __playState = _PlayState.disabled;
     }
+    seekPos = null;
     _player
         .openAudioSession(
             focus: AudioFocus.requestFocusAndDuckOthers,
