@@ -663,7 +663,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           });
     }
     //break;
-    return SizedBox(height: 50, width: 30, child: widget);
+    return SizedBox(height: 28, width: 28, child: widget);
   }
 
   Widget _buildDuration() {
