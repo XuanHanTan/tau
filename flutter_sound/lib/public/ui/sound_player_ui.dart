@@ -728,6 +728,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         }
       },
       _sliderThemeData,
+      _rectime,
     ));
   }
 
@@ -814,12 +815,13 @@ class PlaybarSlider extends StatefulWidget {
   final Stream<PlaybackDisposition> stream;
 
   final SliderThemeData? _sliderThemeData;
-
+  final int? _rectime;
   ///
   PlaybarSlider(
     this.stream,
     this._seek,
     this._sliderThemeData,
+    this._rectime
   );
 
   @override
@@ -846,7 +848,7 @@ class _PlaybarSliderState extends State<PlaybarSlider> {
         ),
         child: StreamBuilder<PlaybackDisposition>(
             stream: widget.stream,
-            initialData: PlaybackDisposition.zero(),
+            initialData: PlaybackDisposition(duration: Duration(seconds: widget._rectime!), position: Duration(seconds: 0)),
             builder: (context, snapshot) {
               var disposition = snapshot.data!;
               return Slider(
