@@ -512,7 +512,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   /// internal start method.
   void _start() async {
     var trck = _track;
-    var prevstate = _playState;
     if (trck != null) {
       await _player
           .startPlayerFromTrack(trck, whenFinished: _onStopped)
@@ -530,7 +529,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           await _player.seekToPlayer(seekPos!).whenComplete(() {
             Future.delayed(
                 Duration(
-                    milliseconds: prevstate == _PlayState.stopped ? 500 : 150),
+                    milliseconds: 150),
                 () {
               setState(() {
                 seekPos = null;
