@@ -373,7 +373,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           ),
         ),
       ),*/
-      Container(height: 40, child: Column(children: rows))
+      Column(children: rows)
     ]);
   }
 
