@@ -620,8 +620,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       button = _buildPlayButtonIcon(button);
     }
     return Container(
-        width: 28,
-        height: 28,
+       
         child: Padding(
             padding: EdgeInsets.only(left: 0, right: 0),
             child: FutureBuilder<bool>(
