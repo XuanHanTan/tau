@@ -373,7 +373,11 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           ),
         ),
       ),*/
-      Column(children: rows)
+      Expanded(
+          child: Column(
+        children: rows,
+        mainAxisAlignment: MainAxisAlignment.center,
+      ))
     ]);
   }
 
@@ -706,25 +710,23 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   Widget _buildSlider() {
     return Expanded(
-        child: Center(
-      child: PlaybarSlider(
-        _localController.stream,
-        (position) {
-          _sliderPosition.position = position;
-          if (_player.isPlaying || _player.isPaused) {
-            _player.seekToPlayer(position);
-          } else {
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-              setState(() {
-                seekPos = position;
-              });
-              Log.d("FS --> seek $position");
+        child: PlaybarSlider(
+      _localController.stream,
+      (position) {
+        _sliderPosition.position = position;
+        if (_player.isPlaying || _player.isPaused) {
+          _player.seekToPlayer(position);
+        } else {
+          WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            setState(() {
+              seekPos = position;
             });
-          }
-        },
-        _sliderThemeData,
-        _rectime,
-      ),
+            Log.d("FS --> seek $position");
+          });
+        }
+      },
+      _sliderThemeData,
+      _rectime,
     ));
   }
 
