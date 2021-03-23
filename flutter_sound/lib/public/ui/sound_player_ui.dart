@@ -357,7 +357,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     return Container(
         //height: 70,
 
-        child: Row(children: [
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
       _buildDuration(),
       _buildPlayButton(),
       _buildTitle(),
@@ -511,6 +513,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   /// internal start method.
   void _start() async {
     var trck = _track;
+    var prevstate = _playState;
     if (trck != null) {
       await _player
           .startPlayerFromTrack(trck, whenFinished: _onStopped)
@@ -526,7 +529,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         if (seekPos != null) {
           Log.d("FS --> seeking to  $seekPos");
           await _player.seekToPlayer(seekPos!).whenComplete(() {
-            Future.delayed(Duration(milliseconds: 125), () {
+            Future.delayed(Duration(milliseconds: prevstate == _PlayState.stopped ? 300:150), () {
               setState(() {
                 seekPos = null;
               });
