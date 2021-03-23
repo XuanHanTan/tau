@@ -526,7 +526,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         if (seekPos != null) {
           Log.d("FS --> seeking to  $seekPos");
           await _player.seekToPlayer(seekPos!).whenComplete(() {
-            Future.delayed(Duration(milliseconds: 50), () {
+            Future.delayed(Duration(milliseconds: 100), () {
               setState(() {
                 seekPos = null;
               });
@@ -658,20 +658,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   }
 
   Widget _buildPlayButtonIcon(Widget? widget) {
-    if (_playState == _PlayState.disabled) {
-      widget = _GrayedOut(
-          grayedOut: true,
-          child: widget = Icon(Icons.play_arrow, color: _disabledIconColor));
-    } else {
-      widget = FutureBuilder<bool>(
-          future: canPlay,
-          builder: (context, asyncData) {
-            return Icon(_player.isStopped ? Icons.play_arrow : Icons.pause,
-                color: Colors.white);
-          });
-    }
-    //break;
-    return SizedBox(height: 28, width: 28, child: widget);
+    return Icon(_player.isStopped ? Icons.play_arrow : Icons.pause,
+        color: Colors.white);
   }
 
   Widget _buildDuration() {
