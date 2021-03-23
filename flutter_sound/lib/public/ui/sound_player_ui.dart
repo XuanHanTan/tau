@@ -56,7 +56,8 @@ typedef OnLoad = Future<Track> Function(BuildContext context);
 ///
 /// -----------------------------------------------------------------
 ///
-  Duration? seekPos;
+Duration? seekPos;
+
 class SoundPlayerUI extends StatefulWidget {
   /// only codec support by android unless we have a minSdk of 29
   /// then OGG_VORBIS and OPUS are supported.
@@ -296,7 +297,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     return ChangeNotifierProvider<_SliderPosition>(
         create: (_) => _sliderPosition, child: _buildPlayBar());
   }
-  
+
   void _setCallbacks() {
     /// TODO
     /// should we chain these events in case the user of our api
@@ -357,9 +358,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         //height: 70,
 
         child: Row(children: [
-          _buildDuration(), 
+      _buildDuration(),
       _buildPlayButton(),
-      
       _buildTitle(),
       /*SizedBox(
         height: 49,
@@ -513,7 +513,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     var trck = _track;
     if (trck != null) {
       await _player
-          .startPlayerFromTrack(trck, whenFinished: _onStopped)
+          .startPlayerFromTrack(trck,
+              whenFinished: _onStopped, progress: seekPos)
           .then((_) {
         _playState = _PlayState.playing;
       }).catchError((dynamic e) {
@@ -525,13 +526,13 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _loading = false;
         _transitioning = false;
         Log.d(green('Transitioning = false'));
-        if (seekPos != null){
+        /*if (seekPos != null){
           Log.d("FS --> seeking to  $seekPos");
           _player.seekToPlayer(seekPos!);
           setState(() {
             seekPos = null;
           });
-        }
+        }*/
       });
     }
   }
@@ -633,23 +634,26 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                   }
 
                   return Material(
-                     shape: new RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      new BorderRadius.circular(
-                                                          28.0)),
-                    child: IconButton(
-                      autofocus: true,
-                      padding: EdgeInsets.zero,
-                      splashRadius: 20,
-                      onPressed: _canPlay &&
-                              (_playState == _PlayState.stopped ||
-                                  _playState == _PlayState.playing ||
-                                  _playState == _PlayState.paused)
-                          ? () {
-                              return _onPlay(context);
-                            }
-                          : null,
-                      icon: button!),);
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28.0)),
+                      child: InkWell(
+                        customBorder: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28.0)),
+                        radius: 28,
+                        child: IconButton(
+                            autofocus: true,
+                            padding: EdgeInsets.zero,
+                            splashRadius: 20,
+                            onPressed: _canPlay &&
+                                    (_playState == _PlayState.stopped ||
+                                        _playState == _PlayState.playing ||
+                                        _playState == _PlayState.paused)
+                                ? () {
+                                    return _onPlay(context);
+                                  }
+                                : null,
+                            icon: button!),
+                      ));
                 })));
   }
 
@@ -677,7 +681,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   Widget _buildDuration() {
     return StreamBuilder<PlaybackDisposition>(
         stream: _localController.stream,
-        initialData: PlaybackDisposition(duration: Duration(seconds: _rectime!), position: Duration(seconds: 0)),
+        initialData: PlaybackDisposition(
+            duration: Duration(seconds: _rectime!),
+            position: Duration(seconds: 0)),
         builder: (context, snapshot) {
           var disposition = snapshot.data!;
           var durationDate = DateTime.fromMillisecondsSinceEpoch(
@@ -721,10 +727,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         } else {
           WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
             setState(() {
-            seekPos = position;
+              seekPos = position;
+            });
+            Log.d("FS --> seek $position");
           });
-          Log.d("FS --> seek $position");
-           });
         }
       },
       _sliderThemeData,
@@ -816,13 +822,9 @@ class PlaybarSlider extends StatefulWidget {
 
   final SliderThemeData? _sliderThemeData;
   final int? _rectime;
+
   ///
-  PlaybarSlider(
-    this.stream,
-    this._seek,
-    this._sliderThemeData,
-    this._rectime
-  );
+  PlaybarSlider(this.stream, this._seek, this._sliderThemeData, this._rectime);
 
   @override
   State<StatefulWidget> createState() {
@@ -848,12 +850,15 @@ class _PlaybarSliderState extends State<PlaybarSlider> {
         ),
         child: StreamBuilder<PlaybackDisposition>(
             stream: widget.stream,
-            initialData: PlaybackDisposition(duration: Duration(seconds: widget._rectime!), position: Duration(seconds: 0)),
+            initialData: PlaybackDisposition(
+                duration: Duration(seconds: widget._rectime!),
+                position: Duration(seconds: 0)),
             builder: (context, snapshot) {
               var disposition = snapshot.data!;
               return Slider(
                 max: disposition.duration.inMilliseconds.toDouble(),
-                value: seekPos?.inMilliseconds.toDouble() ?? disposition.position.inMilliseconds.toDouble(),
+                value: seekPos?.inMilliseconds.toDouble() ??
+                    disposition.position.inMilliseconds.toDouble(),
                 onChanged: (value) =>
                     widget._seek(Duration(milliseconds: value.toInt())),
               );
