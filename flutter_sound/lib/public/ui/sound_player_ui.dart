@@ -526,11 +526,11 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         if (seekPos != null) {
           Log.d("FS --> seeking to  $seekPos");
           await _player.seekToPlayer(seekPos!).whenComplete(() {
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            Future.delayed(Duration(milliseconds: 50), () {
               setState(() {
                 seekPos = null;
               });
-             });
+            });
           });
         }
         _loading = false;
@@ -666,12 +666,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       widget = FutureBuilder<bool>(
           future: canPlay,
           builder: (context, asyncData) {
-            bool? canPlay = false;
-            if (asyncData.connectionState == ConnectionState.done) {
-              canPlay = asyncData.data;
-            }
             return Icon(_player.isStopped ? Icons.play_arrow : Icons.pause,
-                color: canPlay! ? Colors.white : _disabledIconColor);
+                color: Colors.white);
           });
     }
     //break;
