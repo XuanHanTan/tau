@@ -354,10 +354,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     rows.add(Row(children: [_buildSlider()]));
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
-    return Container(
-        //height: 70,
-
-        child: Row(
+    return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
       _buildDuration(),
@@ -379,7 +376,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         ),
       ),*/
       Expanded(child: Column(children: rows))
-    ]));
+    ]);
   }
 
   /// Returns the players current state.
@@ -529,7 +526,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         if (seekPos != null) {
           Log.d("FS --> seeking to  $seekPos");
           await _player.seekToPlayer(seekPos!).whenComplete(() {
-            Future.delayed(Duration(milliseconds: prevstate == _PlayState.stopped ? 300:150), () {
+            Future.delayed(Duration(milliseconds: prevstate == _PlayState.stopped ? 400:150), () {
               setState(() {
                 seekPos = null;
               });
