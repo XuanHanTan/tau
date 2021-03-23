@@ -354,9 +354,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     rows.add(Row(children: [_buildSlider()]));
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
-    return Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+    return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
       _buildDuration(),
       _buildPlayButton(),
       _buildTitle(),
@@ -375,7 +373,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           ),
         ),
       ),*/
-      Expanded(child: Column(children: rows))
+      Container(height: 40, child: Column(children: rows))
     ]);
   }
 
@@ -526,7 +524,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         if (seekPos != null) {
           Log.d("FS --> seeking to  $seekPos");
           await _player.seekToPlayer(seekPos!).whenComplete(() {
-            Future.delayed(Duration(milliseconds: prevstate == _PlayState.stopped ? 400:150), () {
+            Future.delayed(
+                Duration(
+                    milliseconds: prevstate == _PlayState.stopped ? 500 : 150),
+                () {
               setState(() {
                 seekPos = null;
               });
@@ -705,23 +706,25 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   Widget _buildSlider() {
     return Expanded(
-        child: PlaybarSlider(
-      _localController.stream,
-      (position) {
-        _sliderPosition.position = position;
-        if (_player.isPlaying || _player.isPaused) {
-          _player.seekToPlayer(position);
-        } else {
-          WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-            setState(() {
-              seekPos = position;
+        child: Center(
+      child: PlaybarSlider(
+        _localController.stream,
+        (position) {
+          _sliderPosition.position = position;
+          if (_player.isPlaying || _player.isPaused) {
+            _player.seekToPlayer(position);
+          } else {
+            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+              setState(() {
+                seekPos = position;
+              });
+              Log.d("FS --> seek $position");
             });
-            Log.d("FS --> seek $position");
-          });
-        }
-      },
-      _sliderThemeData,
-      _rectime,
+          }
+        },
+        _sliderThemeData,
+        _rectime,
+      ),
     ));
   }
 
