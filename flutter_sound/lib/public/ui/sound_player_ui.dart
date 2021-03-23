@@ -512,13 +512,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   void _start() async {
     var trck = _track;
     if (trck != null) {
-      if (seekPos != null) {
-        Log.d("FS --> seeking to  $seekPos");
-        _player.seekToPlayer(seekPos!);
-        setState(() {
-          seekPos = null;
-        });
-      }
       await _player
           .startPlayerFromTrack(trck, whenFinished: _onStopped)
           .then((_) {
@@ -528,10 +521,17 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _playState = _PlayState.stopped;
 
         return null;
-      }).whenComplete(() {
+      }).whenComplete(() async {
+        Log.d(green('Transitioning = false'));
+        if (seekPos != null) {
+          Log.d("FS --> seeking to  $seekPos");
+          await _player.seekToPlayer(seekPos!);
+          setState(() {
+            seekPos = null;
+          });
+        }
         _loading = false;
         _transitioning = false;
-        Log.d(green('Transitioning = false'));
       });
     }
   }
