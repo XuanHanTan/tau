@@ -529,7 +529,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           await _player.seekToPlayer(seekPos!).whenComplete(() {
             Future.delayed(
                 Duration(
-                    milliseconds: 150),
+                    milliseconds: 800),
                 () {
               setState(() {
                 seekPos = null;
