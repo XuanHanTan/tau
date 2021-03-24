@@ -249,7 +249,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _rectime = rectime,
         _localController = StreamController<PlaybackDisposition>.broadcast() {
     _sliderPosition.position = Duration(seconds: 0);
-    _sliderPosition.maxPosition = Duration(seconds: _rectime!);
+    _sliderPosition.maxPosition = Duration(milliseconds: _rectime!);
     if (!_enabled!) {
       __playState = _PlayState.disabled;
     }
@@ -529,7 +529,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           await _player.seekToPlayer(seekPos!).whenComplete(() {
             Future.delayed(
                 Duration(
-                    milliseconds: 3000),
+                    milliseconds: 150),
                 () {
               setState(() {
                 seekPos = null;
@@ -670,7 +670,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     return StreamBuilder<PlaybackDisposition>(
         stream: _localController.stream,
         initialData: PlaybackDisposition(
-            duration: Duration(seconds: _rectime!),
+            duration: Duration(milliseconds: _rectime!),
             position: Duration(seconds: 0)),
         builder: (context, snapshot) {
           var disposition = snapshot.data!;
@@ -842,7 +842,7 @@ class _PlaybarSliderState extends State<PlaybarSlider> {
         child: StreamBuilder<PlaybackDisposition>(
             stream: widget.stream,
             initialData: PlaybackDisposition(
-                duration: Duration(seconds: widget._rectime!),
+                duration: Duration(milliseconds: widget._rectime!),
                 position: Duration(seconds: 0)),
             builder: (context, snapshot) {
               var disposition = snapshot.data!;
