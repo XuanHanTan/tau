@@ -632,12 +632,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                       duration: Duration.zero, position: Duration.zero),
                   builder: (context, asyncData) {
                     return Container(
-                      height: (_iconRadius) * 2,
-                      width: (_iconRadius) * 2,
+                      height: (widget._iconRadius) * 2,
+                      width: (widget._iconRadius) * 2,
                       child: Center(
                           child: Container(
-                              height: _iconRadius,
-                              width: _iconRadius,
+                              height: widget._iconRadius,
+                              width: widget._iconRadius,
                               child: CircularProgressIndicator())),
                     );
                   }));
@@ -664,11 +664,11 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                           child: InkWell(
                             customBorder: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(28.0)),
-                            radius: _iconRadius,
+                            radius: widget._iconRadius,
                             child: IconButton(
                                 autofocus: true,
                                 padding: EdgeInsets.zero,
-                                splashRadius: _iconSplashRadius,
+                                splashRadius: widget._iconSplashRadius,
                                 onPressed: _canPlay &&
                                         (_playState == _PlayState.stopped ||
                                             _playState == _PlayState.playing ||
