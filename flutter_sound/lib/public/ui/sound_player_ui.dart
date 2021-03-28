@@ -78,6 +78,8 @@ class SoundPlayerUI extends StatefulWidget {
   final TextStyle? _titleStyle;
   final SliderThemeData? _sliderThemeData;
   final int? _rectime;
+  final double _iconRadius;
+  final double _iconSplashRadius;
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -98,19 +100,20 @@ class SoundPlayerUI extends StatefulWidget {
   /// media that is playing when our player starts.
   /// By default we use `AudioFocus.requestFocusAndDuckOthers` which will
   /// reduce the volume of any other players.
-  SoundPlayerUI.fromLoader(
-    OnLoad onLoad, {
-    bool showTitle = false,
-    bool enabled = true,
-    AudioFocus audioFocus = AudioFocus.requestFocusAndKeepOthers,
-    Color? backgroundColor,
-    Color iconColor = Colors.black,
-    Color disabledIconColor = Colors.grey,
-    TextStyle? textStyle,
-    TextStyle? titleStyle,
-    SliderThemeData? sliderThemeData,
-    int? rectime,
-  })  : _onLoad = onLoad,
+  SoundPlayerUI.fromLoader(OnLoad onLoad,
+      {bool showTitle = false,
+      bool enabled = true,
+      AudioFocus audioFocus = AudioFocus.requestFocusAndKeepOthers,
+      Color? backgroundColor,
+      Color iconColor = Colors.black,
+      Color disabledIconColor = Colors.grey,
+      TextStyle? textStyle,
+      TextStyle? titleStyle,
+      SliderThemeData? sliderThemeData,
+      int? rectime,
+      double iconRadius = 24,
+      double iconSplashRadius = 20})
+      : _onLoad = onLoad,
         _showTitle = showTitle,
         _track = null,
         _enabled = enabled,
@@ -121,7 +124,9 @@ class SoundPlayerUI extends StatefulWidget {
         _textStyle = textStyle,
         _titleStyle = titleStyle,
         _sliderThemeData = sliderThemeData,
-        _rectime = rectime;
+        _rectime = rectime,
+        _iconRadius = iconRadius,
+        _iconSplashRadius = iconSplashRadius;
 
   ///
   /// [SoundPlayerUI.fromTrack] Constructs a Playbar with a Track.
@@ -138,19 +143,20 @@ class SoundPlayerUI extends StatefulWidget {
   /// media that is playing when our player starts.
   /// By default we use 'AudioFocus.focusAndHushOthers` which will
   /// reduce the volume of any other players.
-  SoundPlayerUI.fromTrack(
-    Track track, {
-    bool showTitle = false,
-    bool enabled = true,
-    AudioFocus audioFocus = AudioFocus.requestFocusAndKeepOthers,
-    Color? backgroundColor,
-    Color iconColor = Colors.black,
-    Color disabledIconColor = Colors.grey,
-    TextStyle? textStyle,
-    TextStyle? titleStyle,
-    SliderThemeData? sliderThemeData,
-    int? rectime,
-  })  : _track = track,
+  SoundPlayerUI.fromTrack(Track track,
+      {bool showTitle = false,
+      bool enabled = true,
+      AudioFocus audioFocus = AudioFocus.requestFocusAndKeepOthers,
+      Color? backgroundColor,
+      Color iconColor = Colors.black,
+      Color disabledIconColor = Colors.grey,
+      TextStyle? textStyle,
+      TextStyle? titleStyle,
+      SliderThemeData? sliderThemeData,
+      int? rectime,
+      double iconRadius = 24,
+      double iconSplashRadius = 20})
+      : _track = track,
         _showTitle = showTitle,
         _onLoad = null,
         _enabled = enabled,
@@ -160,7 +166,9 @@ class SoundPlayerUI extends StatefulWidget {
         _textStyle = textStyle,
         _titleStyle = titleStyle,
         _sliderThemeData = sliderThemeData,
-        _rectime = rectime;
+        _rectime = rectime,
+        _iconRadius = iconRadius,
+        _iconSplashRadius = iconSplashRadius;
 
   @override
   State<StatefulWidget> createState() {
@@ -227,6 +235,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   final SliderThemeData? _sliderThemeData;
 
   final int? _rectime;
+  final double _iconRadius;
+  final double _iconSplashRadius;
 
   ///
   SoundPlayerUIState(this._track, this._onLoad,
@@ -237,7 +247,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       TextStyle? textStyle,
       TextStyle? titleStyle,
       SliderThemeData? sliderThemeData,
-      int? rectime})
+      int? rectime,
+      double iconRadius = 24,
+      double iconSplashRadius = 20})
       : _player = FlutterSoundPlayer(),
         _enabled = enabled,
         _backgroundColor = backgroundColor,
@@ -247,6 +259,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _titleStyle = titleStyle,
         _sliderThemeData = sliderThemeData,
         _rectime = rectime,
+        _iconRadius = iconRadius,
+        _iconSplashRadius = iconSplashRadius,
         _localController = StreamController<PlaybackDisposition>.broadcast() {
     _sliderPosition.position = Duration(seconds: 0);
     _sliderPosition.maxPosition = Duration(milliseconds: _rectime!);
@@ -527,10 +541,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         if (seekPos != null) {
           Log.d("FS --> seeking to  $seekPos");
           await _player.seekToPlayer(seekPos!).whenComplete(() {
-            Future.delayed(
-                Duration(
-                    milliseconds: 150),
-                () {
+            Future.delayed(Duration(milliseconds: 150), () {
               setState(() {
                 seekPos = null;
               });
@@ -617,48 +628,55 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                   initialData: PlaybackDisposition(
                       duration: Duration.zero, position: Duration.zero),
                   builder: (context, asyncData) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child:
-                          CircularProgressIndicator(strokeWidth: 5, value: 0.0),
+                    return Container(
+                      height: (_iconRadius) * 2,
+                      width: (_iconRadius) * 2,
+                      child: Center(
+                          child: Container(
+                              height: _iconRadius,
+                              width: _iconRadius,
+                              child: CircularProgressIndicator())),
                     );
                   }));
     } else {
       button = _buildPlayButtonIcon(button);
     }
-    return Container(
-        child: Padding(
-            padding: EdgeInsets.only(left: 0, right: 0),
-            child: FutureBuilder<bool>(
-                future: canPlay,
-                builder: (context, asyncData) {
-                  var _canPlay = false;
-                  if (asyncData.connectionState == ConnectionState.done) {
-                    _canPlay = asyncData.data! && !__transitioning;
-                  }
+    return _loading == true
+        ? button
+        : Container(
+            child: Padding(
+                padding: EdgeInsets.only(left: 0, right: 0),
+                child: FutureBuilder<bool>(
+                    future: canPlay,
+                    builder: (context, asyncData) {
+                      var _canPlay = false;
+                      if (asyncData.connectionState == ConnectionState.done) {
+                        _canPlay = asyncData.data! && !__transitioning;
+                      }
 
-                  return Material(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(28.0)),
-                      child: InkWell(
-                        customBorder: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28.0)),
-                        radius: 28,
-                        child: IconButton(
-                            autofocus: true,
-                            padding: EdgeInsets.zero,
-                            splashRadius: 20,
-                            onPressed: _canPlay &&
-                                    (_playState == _PlayState.stopped ||
-                                        _playState == _PlayState.playing ||
-                                        _playState == _PlayState.paused)
-                                ? () {
-                                    return _onPlay(context);
-                                  }
-                                : null,
-                            icon: button!),
-                      ));
-                })));
+                      return Material(
+                          color: _backgroundColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(28.0)),
+                          child: InkWell(
+                            customBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(28.0)),
+                            radius: _iconRadius,
+                            child: IconButton(
+                                autofocus: true,
+                                padding: EdgeInsets.zero,
+                                splashRadius: _iconSplashRadius,
+                                onPressed: _canPlay &&
+                                        (_playState == _PlayState.stopped ||
+                                            _playState == _PlayState.playing ||
+                                            _playState == _PlayState.paused)
+                                    ? () {
+                                        return _onPlay(context);
+                                      }
+                                    : null,
+                                icon: button!),
+                          ));
+                    })));
   }
 
   Widget _buildPlayButtonIcon(Widget? widget) {
@@ -684,7 +702,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                   disposition.position.inMilliseconds,
                   isUtc: true);
           return Text(
-              '${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
+              //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
+              '${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}',
               style: TextStyle(fontSize: 20, fontFamily: "Roboto"));
         });
   }
