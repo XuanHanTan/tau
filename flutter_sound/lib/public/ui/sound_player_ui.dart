@@ -379,7 +379,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
     return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      _buildDuration(),
+      SizedBox(width: 100, child: _buildDuration(),),
       _buildPlayButton(),
       _buildTitle(),
       /*SizedBox(
@@ -714,10 +714,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               : DateTime.fromMillisecondsSinceEpoch(
                   disposition.position.inMilliseconds,
                   isUtc: true);
-          return Container(width: 150, child: Text(
+          return Text(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
               '${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')}',
-              style: TextStyle(fontSize: 20, fontFamily: "Proxima Nova", fontWeight: FontWeight.bold)));
+              style: TextStyle(fontSize: 20, fontFamily: "Proxima Nova", fontWeight: FontWeight.bold));
         });
   }
 
