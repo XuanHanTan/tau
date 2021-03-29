@@ -379,7 +379,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
     return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      SizedBox(width: 50, child: _buildDuration(),),
+      SizedBox(width: 60, child: _buildDuration(),),
       _buildPlayButton(),
       _buildTitle(),
       /*SizedBox(
