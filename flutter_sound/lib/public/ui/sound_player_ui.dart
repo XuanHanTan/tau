@@ -714,10 +714,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               : DateTime.fromMillisecondsSinceEpoch(
                   disposition.position.inMilliseconds,
                   isUtc: true);
-          return Text(
+          return Container(width: 100, child: Text(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
               '${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')}',
-              style: TextStyle(fontSize: 20, fontFamily: "Proxima Nova", fontWeight: FontWeight.bold));
+              style: TextStyle(fontSize: 20, fontFamily: "Proxima Nova", fontWeight: FontWeight.bold)));
         });
   }
 
