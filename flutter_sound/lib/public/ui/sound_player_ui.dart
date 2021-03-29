@@ -72,6 +72,7 @@ class SoundPlayerUI extends StatefulWidget {
   final bool _enabled;
 
   final Color? _backgroundColor;
+  final Color? _accentColor;
   final Color _iconColor;
   final Color _disabledIconColor;
   final TextStyle? _textStyle;
@@ -105,6 +106,7 @@ class SoundPlayerUI extends StatefulWidget {
       bool enabled = true,
       AudioFocus audioFocus = AudioFocus.requestFocusAndKeepOthers,
       Color? backgroundColor,
+      Color? accentColor,
       Color iconColor = Colors.black,
       Color disabledIconColor = Colors.grey,
       TextStyle? textStyle,
@@ -119,6 +121,7 @@ class SoundPlayerUI extends StatefulWidget {
         _enabled = enabled,
         _backgroundColor =
             (backgroundColor == null) ? Color(0xFFFAF0E6) : backgroundColor,
+        _accentColor = accentColor ?? Color(0xFFFAF0E6),
         _iconColor = iconColor,
         _disabledIconColor = disabledIconColor,
         _textStyle = textStyle,
@@ -148,6 +151,7 @@ class SoundPlayerUI extends StatefulWidget {
       bool enabled = true,
       AudioFocus audioFocus = AudioFocus.requestFocusAndKeepOthers,
       Color? backgroundColor,
+      Color? accentColor,
       Color iconColor = Colors.black,
       Color disabledIconColor = Colors.grey,
       TextStyle? textStyle,
@@ -161,6 +165,7 @@ class SoundPlayerUI extends StatefulWidget {
         _onLoad = null,
         _enabled = enabled,
         _backgroundColor = backgroundColor,
+        _accentColor = accentColor,
         _iconColor = iconColor,
         _disabledIconColor = disabledIconColor,
         _textStyle = textStyle,
@@ -176,6 +181,7 @@ class SoundPlayerUI extends StatefulWidget {
         enabled: _enabled,
         backgroundColor:
             (_backgroundColor != null) ? _backgroundColor : Color(0xFFFAF0E6),
+        accentColor: _accentColor ?? Color(0xFFFAF0E6),
         iconColor: _iconColor,
         disabledIconColor: _disabledIconColor,
         textStyle: _textStyle,
@@ -183,8 +189,7 @@ class SoundPlayerUI extends StatefulWidget {
         sliderThemeData: _sliderThemeData,
         rectime: _rectime,
         iconRadius: _iconRadius,
-        iconSplashRadius: _iconSplashRadius
-        );
+        iconSplashRadius: _iconSplashRadius);
   }
 }
 
@@ -224,7 +229,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   final bool? _enabled;
 
   final Color? _backgroundColor;
-
+  final Color? _accentColor;
   final Color? _iconColor;
 
   final Color? _disabledIconColor;
@@ -245,6 +250,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   SoundPlayerUIState(this._track, this._onLoad,
       {bool? enabled,
       Color? backgroundColor,
+      Color? accentColor,
       Color? iconColor,
       Color? disabledIconColor,
       TextStyle? textStyle,
@@ -256,6 +262,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       : _player = FlutterSoundPlayer(),
         _enabled = enabled,
         _backgroundColor = backgroundColor,
+        _accentColor = accentColor,
         _iconColor = iconColor,
         _disabledIconColor = disabledIconColor,
         _textStyle = textStyle,
@@ -638,7 +645,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                           child: Container(
                               height: widget._iconRadius,
                               width: widget._iconRadius,
-                              child: CircularProgressIndicator())),
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    widget._accentColor ?? Color(0xFFFAF0E6)),
+                              ))),
                     );
                   }));
     } else {
@@ -707,7 +717,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           return Text(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
               '${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')}',
-              style: TextStyle(fontSize: 20, fontFamily: "Roboto"));
+              style: TextStyle(fontSize: 20, fontFamily: "Proxima Nova", fontWeight: FontWeight.bold));
         });
   }
 
