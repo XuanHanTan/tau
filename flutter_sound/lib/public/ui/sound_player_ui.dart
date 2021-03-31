@@ -59,6 +59,7 @@ typedef OnLoad = Future<Track> Function(BuildContext context);
 /// -----------------------------------------------------------------
 ///
 Duration? seekPos;
+Track? seekTrack;
 
 class SoundPlayerUI extends StatefulWidget {
   /// only codec support by android unless we have a minSdk of 29
@@ -504,6 +505,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   /// start playback.
   void play() async {
+    if (seekTrack != _track){
+      setState(() {
+        seekPos = null;
+      seekTrack = _track;
+      });
+    }
     _transitioning = true;
     _loading = true;
     Log.d('Loading starting');
