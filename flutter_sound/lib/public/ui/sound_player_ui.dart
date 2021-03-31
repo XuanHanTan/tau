@@ -691,18 +691,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                                             _playState == _PlayState.playing ||
                                             _playState == _PlayState.paused)
                                     ? () async {
-                                        if (_playState == _PlayState.playing) {
-                                          WidgetsBinding.instance!
-                                              .addPostFrameCallback(
-                                                  (timeStamp) async {
-                                            setState(() {
-                                              seekPos = _localController.stream
-                                                  .shareValue()
-                                                  .value!
-                                                  .duration;
-                                            });
-                                          });
-                                        }
                                         return _onPlay(context);
                                       }
                                     : null,
@@ -733,6 +721,14 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           var second = positionDate.inSeconds % 60;
           var minuteD = durationDate.inMinutes % 60;
           var secondD = durationDate.inSeconds % 60;
+          WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            if (_playState == _PlayState.paused ||
+                _playState == _PlayState.disabled) {
+              setState(() {
+                seekPos = _localController.stream.shareValue().value!.duration;
+              });
+            }
+          });
           return AutoSizeText(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
               _playState == _PlayState.disabled
