@@ -533,7 +533,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     /// can display appropriate errors.
     _track = await newTrack;
     if (_track != null) {
-      if (_playState == _PlayState.stopped){
+      if (_playState == _PlayState.stopped && _localController.stream.shareValue().value != null){
         setState(() {
         seekPos = _localController.stream.shareValue().value!.position;
       });
