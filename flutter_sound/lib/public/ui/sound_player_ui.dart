@@ -727,7 +727,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               _playState == _PlayState.stopped) {
             WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
               setState(() {
-                seekPos = _localController.stream.shareValue().value!.position;
+                seekPos = disposition.position;
               });
               print("pauseseekpos build $seekPos");
             });
