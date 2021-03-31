@@ -558,7 +558,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       }).whenComplete(() async {
         Log.d(green('Transitioning = false'));
         if (seekPos != null) {
-          Log.d("FS --> seeking to  $seekPos");
+          print("FS --> seeking to  $seekPos");
           await _player.seekToPlayer(seekPos!).whenComplete(() {
             Future.delayed(Duration(milliseconds: 150), () {
               setState(() {
