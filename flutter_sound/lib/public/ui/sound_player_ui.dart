@@ -534,6 +534,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     _track = await newTrack;
     if (_track != null) {
       print(seekPos);
+      print("seekpos");
       _start();
     } else {
       _loading = false;
