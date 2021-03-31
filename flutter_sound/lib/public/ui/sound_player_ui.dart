@@ -689,7 +689,16 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                                         (_playState == _PlayState.stopped ||
                                             _playState == _PlayState.playing ||
                                             _playState == _PlayState.paused)
-                                    ? () {
+                                    ? () async {
+                                      if (_playState == _PlayState.playing){
+                                        WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+            
+              seekPos = (await _localController.stream.last).duration;
+            setState(() {
+              
+            });
+          });
+                                      }
                                         return _onPlay(context);
                                       }
                                     : null,
