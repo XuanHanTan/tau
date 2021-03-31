@@ -38,6 +38,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../flutter_sound.dart';
+import 'package:rxdart/rxdart.dart';
 import '../util/log.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
@@ -690,15 +691,18 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                                             _playState == _PlayState.playing ||
                                             _playState == _PlayState.paused)
                                     ? () async {
-                                      if (_playState == _PlayState.playing){
-                                        WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-            
-              seekPos = (await _localController.stream.last).duration;
-            setState(() {
-              
-            });
-          });
-                                      }
+                                        if (_playState == _PlayState.playing) {
+                                          WidgetsBinding.instance!
+                                              .addPostFrameCallback(
+                                                  (timeStamp) async {
+                                            setState(() {
+                                              seekPos = _localController.stream
+                                                  .shareValue()
+                                                  .value!
+                                                  .duration;
+                                            });
+                                          });
+                                        }
                                         return _onPlay(context);
                                       }
                                     : null,
