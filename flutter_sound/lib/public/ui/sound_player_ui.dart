@@ -583,11 +583,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   ///
   Future<void> _stop({bool supressState = false}) async {
     if (_player.isPlaying || _player.isPaused) {
-      if (_localController.stream.shareValue().value != null) {
-        setState(() {
-          seekPos = _localController.stream.shareValue().value!.position;
-        });
-      }
       print("stopseekpos $seekPos");
       await _player.stopPlayer().then<void>((_) {
         if (_playerSubscription != null) {
@@ -728,6 +723,15 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           var second = positionDate.inSeconds % 60;
           var minuteD = durationDate.inMinutes % 60;
           var secondD = durationDate.inSeconds % 60;
+          if (_playState == _PlayState.paused ||
+              _playState == _PlayState.stopped) {
+            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+              setState(() {
+                seekPos = _localController.stream.shareValue().value!.position;
+              });
+              print("pauseseekpos build $seekPos");
+            });
+          }
           return AutoSizeText(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
               _playState == _PlayState.disabled
@@ -903,6 +907,7 @@ class _PlaybarSliderState extends State<PlaybarSlider> {
                 position: Duration(seconds: 0)),
             builder: (context, snapshot) {
               var disposition = snapshot.data!;
+
               return Slider(
                 max: disposition.duration.inMilliseconds.toDouble(),
                 value: seekPos?.inMilliseconds.toDouble() ??
