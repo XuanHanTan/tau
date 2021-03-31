@@ -533,6 +533,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     /// can display appropriate errors.
     _track = await newTrack;
     if (_track != null) {
+      print(seekPos);
       _start();
     } else {
       _loading = false;
