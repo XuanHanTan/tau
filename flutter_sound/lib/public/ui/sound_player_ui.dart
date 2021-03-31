@@ -58,8 +58,7 @@ typedef OnLoad = Future<Track> Function(BuildContext context);
 ///
 /// -----------------------------------------------------------------
 ///
-Duration? seekPos;
-Track? seekTrack;
+
 
 class SoundPlayerUI extends StatefulWidget {
   /// only codec support by android unless we have a minSdk of 29
@@ -68,7 +67,6 @@ class SoundPlayerUI extends StatefulWidget {
   static const int _barHeight = 60;
 
   final OnLoad? _onLoad;
-
   final Track? _track;
   final bool _showTitle;
 
@@ -226,7 +224,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   /// until the user clicks the Play button and onLoad
   /// returns a non null [Track]
   Track? _track;
-
+  Duration? seekPos;  
   final OnLoad? _onLoad;
 
   final bool? _enabled;
@@ -505,12 +503,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   /// start playback.
   void play() async {
-    if (seekTrack != _track){
-      setState(() {
-        seekPos = null;
-      seekTrack = _track;
-      });
-    }
     _transitioning = true;
     _loading = true;
     Log.d('Loading starting');
@@ -794,6 +786,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       },
       _sliderThemeData,
       _rectime,
+      seekPos
     ));
   }
 
@@ -881,9 +874,9 @@ class PlaybarSlider extends StatefulWidget {
 
   final SliderThemeData? _sliderThemeData;
   final int? _rectime;
-
+    Duration? seekPos;
   ///
-  PlaybarSlider(this.stream, this._seek, this._sliderThemeData, this._rectime);
+  PlaybarSlider(this.stream, this._seek, this._sliderThemeData, this._rectime, this.seekPos);
 
   @override
   State<StatefulWidget> createState() {
@@ -917,7 +910,7 @@ class _PlaybarSliderState extends State<PlaybarSlider> {
 
               return Slider(
                 max: disposition.duration.inMilliseconds.toDouble(),
-                value: seekPos?.inMilliseconds.toDouble() ??
+                value: widget.seekPos?.inMilliseconds.toDouble() ??
                     disposition.position.inMilliseconds.toDouble(),
                 onChanged: (value) =>
                     widget._seek(Duration(milliseconds: value.toInt())),
