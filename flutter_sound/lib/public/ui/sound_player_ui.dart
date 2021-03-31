@@ -533,11 +533,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     /// can display appropriate errors.
     _track = await newTrack;
     if (_track != null) {
-      if (_playState == _PlayState.stopped && _localController.stream.shareValue().value != null && seekPos == null){
-        setState(() {
-        seekPos = _localController.stream.shareValue().value!.position;
-      });
-      }
       print("seekpos $seekPos");
       _start();
     } else {
@@ -588,6 +583,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   ///
   Future<void> _stop({bool supressState = false}) async {
     if (_player.isPlaying || _player.isPaused) {
+      if (_localController.stream.shareValue().value != null) {
+        setState(() {
+          seekPos = _localController.stream.shareValue().value!.position;
+        });
+      }
+      print("stopseekpos $seekPos");
       await _player.stopPlayer().then<void>((_) {
         if (_playerSubscription != null) {
           _playerSubscription!.cancel();
