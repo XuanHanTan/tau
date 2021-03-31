@@ -722,8 +722,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           var minuteD = durationDate.inMinutes % 60;
           var secondD = durationDate.inSeconds % 60;
           WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-            if (_playState == _PlayState.paused ||
-                _playState == _PlayState.disabled) {
+            if ((_playState == _PlayState.paused ||
+                _playState == _PlayState.disabled) && seekPos == null) {
               setState(() {
                 seekPos = _localController.stream.shareValue().value!.duration;
               });
