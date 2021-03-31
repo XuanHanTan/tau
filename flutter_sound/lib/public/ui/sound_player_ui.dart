@@ -39,6 +39,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../flutter_sound.dart';
 import '../util/log.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 ///
 typedef OnLoad = Future<Track> Function(BuildContext context);
@@ -379,7 +380,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
     return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      SizedBox(width: _rectime! >= 3600000 ? 80: 55, child: Align(alignment: Alignment.centerRight, child:  _buildDuration(),)),
+      SizedBox(
+          width: _rectime! >= 3600000 ? 80 : 55,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: _buildDuration(),
+          )),
       _buildPlayButton(),
       _buildTitle(),
       /*SizedBox(
@@ -705,19 +711,30 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
             position: Duration(seconds: 0)),
         builder: (context, snapshot) {
           var disposition = snapshot.data!;
-          var durationDate = DateTime.fromMillisecondsSinceEpoch(
-              disposition.duration.inMilliseconds,
-              isUtc: true);
+          var durationDate =
+              Duration(milliseconds: disposition.duration.inMilliseconds);
           var positionDate = seekPos != null
-              ? DateTime.fromMillisecondsSinceEpoch(seekPos!.inMilliseconds,
-                  isUtc: true)
-              : DateTime.fromMillisecondsSinceEpoch(
-                  disposition.position.inMilliseconds,
-                  isUtc: true);
-          return Text(
+              ? Duration(milliseconds: seekPos!.inMilliseconds)
+              : Duration(milliseconds: disposition.position.inMilliseconds);
+          var minute = positionDate.inMinutes % 60;
+          var second = positionDate.inSeconds % 60;
+          var minuteD = durationDate.inMinutes % 60;
+          var secondD = durationDate.inSeconds % 60;
+          return AutoSizeText(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
-              durationDate.hour > 0 ? '${positionDate.hour.toString()}:${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')}':'${positionDate.minute.toString()}:${positionDate.second.toString().padLeft(2, '0')}',
-              style: TextStyle(fontSize: 20, fontFamily: "Proxima Nova", fontWeight: FontWeight.bold));
+              _playState == _PlayState.stopped
+                  ? (durationDate.inHours > 0
+                      ? '${durationDate.inHours}:${minuteD.toString().padLeft(2, '0')}:${secondD.toString().padLeft(2, '0')}'
+                      : '$minuteD:${secondD.toString().padLeft(2, '0')}')
+                  : (durationDate.inHours > 0
+                      ? '${positionDate.inHours}:${minute.toString().padLeft(2, '0')}:${second.toString().padLeft(2, '0')}'
+                      : '$minute:${second.toString().padLeft(2, '0')}'),
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: "Proxima Nova",
+                  fontWeight: FontWeight.bold));
         });
   }
 
