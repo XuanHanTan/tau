@@ -533,8 +533,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     /// can display appropriate errors.
     _track = await newTrack;
     if (_track != null) {
-      print(seekPos);
-      print("seekpos");
+      setState(() {
+        seekPos = _localController.stream.shareValue().value!.position;
+      });
+      print("seekpos $seekPos");
       _start();
     } else {
       _loading = false;
@@ -723,15 +725,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           var second = positionDate.inSeconds % 60;
           var minuteD = durationDate.inMinutes % 60;
           var secondD = durationDate.inSeconds % 60;
-          if ((_playState == _PlayState.paused ||
-                  _playState == _PlayState.disabled) &&
-              seekPos == null) {
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-              setState(() {
-                seekPos = _localController.stream.shareValue().value!.position;
-              });
-            });
-          }
           return AutoSizeText(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
               _playState == _PlayState.disabled
