@@ -722,7 +722,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           var secondD = durationDate.inSeconds % 60;
           return AutoSizeText(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
-              _playState == _PlayState.stopped
+              _playState == _PlayState.disabled
                   ? (durationDate.inHours > 0
                       ? '${durationDate.inHours}:${minuteD.toString().padLeft(2, '0')}:${secondD.toString().padLeft(2, '0')}'
                       : '$minuteD:${secondD.toString().padLeft(2, '0')}')
