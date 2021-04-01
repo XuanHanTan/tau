@@ -320,9 +320,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     var orientation = MediaQuery.of(context).orientation;
     if (prevorientation != orientation) {
       print("changeorientation");
-      if (__playState == _PlayState.playing) {
-        play();
-      }
+      stop();
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         setState(() {
           prevorientation = orientation;
@@ -614,7 +612,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       _loading = false;
     }
 
-    _sliderPosition.position = Duration.zero;
+    //_sliderPosition.position = Duration.zero;
   }
 
   /// put the ui into a 'loading' state which
