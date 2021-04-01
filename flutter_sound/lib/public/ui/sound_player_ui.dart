@@ -58,7 +58,6 @@ typedef OnLoad = Future<Track> Function(BuildContext context);
 /// -----------------------------------------------------------------
 ///
 
-
 class SoundPlayerUI extends StatefulWidget {
   /// only codec support by android unless we have a minSdk of 29
   /// then OGG_VORBIS and OPUS are supported.
@@ -223,7 +222,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   /// until the user clicks the Play button and onLoad
   /// returns a non null [Track]
   Track? _track;
-  Duration? seekPos;  
+  Duration? seekPos;
   final OnLoad? _onLoad;
 
   final bool? _enabled;
@@ -315,8 +314,21 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   }
 
   ///
+  var prevorientation;
   @override
   Widget build(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
+    if (prevorientation != orientation) {
+      print("changeorientation");
+      if (__playState == _PlayState.playing) {
+        play();
+      }
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        setState(() {
+          prevorientation = orientation;
+        });
+      });
+    }
     registerPlayer(context, this);
     return ChangeNotifierProvider<_SliderPosition>(
         create: (_) => _sliderPosition, child: _buildPlayBar());
@@ -722,7 +734,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
           var minuteD = durationDate.inMinutes % 60;
           var secondD = durationDate.inSeconds % 60;
           if ((_playState == _PlayState.paused ||
-              _playState == _PlayState.stopped) && seekPos == null) {
+                  _playState == _PlayState.stopped) &&
+              seekPos == null) {
             WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
               setState(() {
                 seekPos = disposition.position;
@@ -768,25 +781,19 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   Widget _buildSlider() {
     return Expanded(
-        child: PlaybarSlider(
-      _localController.stream,
-      (position) {
-        _sliderPosition.position = position;
-        if (_player.isPlaying || _player.isPaused) {
-          _player.seekToPlayer(position);
-        } else {
-          WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-            setState(() {
-              seekPos = position;
-            });
-            Log.d("FS --> seek $position");
+        child: PlaybarSlider(_localController.stream, (position) {
+      _sliderPosition.position = position;
+      if (_player.isPlaying || _player.isPaused) {
+        _player.seekToPlayer(position);
+      } else {
+        WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+          setState(() {
+            seekPos = position;
           });
-        }
-      },
-      _sliderThemeData,
-      _rectime,
-      seekPos
-    ));
+          Log.d("FS --> seek $position");
+        });
+      }
+    }, _sliderThemeData, _rectime, seekPos));
   }
 
   Widget _buildTitle() {
@@ -873,9 +880,11 @@ class PlaybarSlider extends StatefulWidget {
 
   final SliderThemeData? _sliderThemeData;
   final int? _rectime;
-    Duration? seekPos;
+  Duration? seekPos;
+
   ///
-  PlaybarSlider(this.stream, this._seek, this._sliderThemeData, this._rectime, this.seekPos);
+  PlaybarSlider(this.stream, this._seek, this._sliderThemeData, this._rectime,
+      this.seekPos);
 
   @override
   State<StatefulWidget> createState() {
