@@ -38,7 +38,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../flutter_sound.dart';
-import 'package:rxdart/rxdart.dart';
 import '../util/log.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
