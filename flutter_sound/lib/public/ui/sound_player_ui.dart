@@ -320,12 +320,13 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     var orientation = MediaQuery.of(context).orientation;
     if (prevorientation != orientation) {
       print("changeorientation");
-      if (_playState == _PlayState.playing){
-        stop().whenComplete(() async {
+      
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+        if (_playState == _PlayState.playing){
+       await stop().whenComplete(() async {
           play();
       });
       }
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
         setState(() {
           prevorientation = orientation;
         });
