@@ -314,24 +314,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   }
 
   ///
-  var prevorientation;
   @override
   Widget build(BuildContext context) {
-    var orientation = MediaQuery.of(context).orientation;
-    if (prevorientation != orientation) {
-      print("changeorientation");
-      /*if (_playState == _PlayState.playing) {
-        stop().whenComplete(() {
-          Future.delayed(Duration(milliseconds: 50), play);
-        });
-      }*/
 
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-        setState(() {
-          prevorientation = orientation;
-        });
-      });
-    }
     registerPlayer(context, this);
     return ChangeNotifierProvider<_SliderPosition>(
         create: (_) => _sliderPosition, child: _buildPlayBar());
@@ -383,6 +368,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   @override
   void dispose() {
     print('stopping Player on dispose');
+    stop();
     _stop(supressState: true);
     _player.closeAudioSession();
     super.dispose();
