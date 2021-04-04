@@ -319,7 +319,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
     if (state.toString() == "AppLifecycleState.paused") {
-      if (_player == _PlayState.playing) {
+      if (_playState == _PlayState.playing) {
         _player.pausePlayer();
         setState(() {
           _playState = _PlayState.paused;
@@ -562,10 +562,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
           whenFinished: _onStopped,
           onSkipBackward: null,
           onSkipForward: null, onPaused: (_) {
-        _player.pausePlayer();
-        setState(() {
-          _playState = _PlayState.paused;
-        });
+        if (_playState == _PlayState.playing) {
+          _player.pausePlayer();
+          setState(() {
+            _playState = _PlayState.paused;
+          });
+        }
       }).then((_) {
         _playState = _PlayState.playing;
       }).catchError((dynamic e) {
