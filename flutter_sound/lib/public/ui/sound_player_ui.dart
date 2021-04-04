@@ -196,7 +196,8 @@ class SoundPlayerUI extends StatefulWidget {
 
 /// internal state.
 /// @nodoc
-class SoundPlayerUIState extends State<SoundPlayerUI> {
+class SoundPlayerUIState extends State<SoundPlayerUI>
+    with WidgetsBindingObserver {
   final FlutterSoundPlayer _player;
 
   final _sliderPosition = _SliderPosition();
@@ -313,10 +314,23 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     //_player.release();
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    if (state.toString() == "AppLifecycleState.paused") {
+      if (_player == _PlayState.playing) {
+        _player.pausePlayer();
+        setState(() {
+          _playState = _PlayState.paused;
+        });
+      }
+    }
+  }
+
   ///
   @override
   Widget build(BuildContext context) {
-
     registerPlayer(context, this);
     return ChangeNotifierProvider<_SliderPosition>(
         create: (_) => _sliderPosition, child: _buildPlayBar());
@@ -544,14 +558,15 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   void _start() async {
     var trck = _track;
     if (trck != null) {
-      await _player
-          .startPlayerFromTrack(trck, whenFinished: _onStopped, onSkipBackward: null, onSkipForward: null, onPaused: (_){
-            _player.pausePlayer();
-            setState(() {
-              _playState = _PlayState.paused;
-            });
-          })
-          .then((_) {
+      await _player.startPlayerFromTrack(trck,
+          whenFinished: _onStopped,
+          onSkipBackward: null,
+          onSkipForward: null, onPaused: (_) {
+        _player.pausePlayer();
+        setState(() {
+          _playState = _PlayState.paused;
+        });
+      }).then((_) {
         _playState = _PlayState.playing;
       }).catchError((dynamic e) {
         Log.w('Error calling play() ${e.toString()}');
