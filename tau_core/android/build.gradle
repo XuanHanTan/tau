@@ -70,7 +70,7 @@ dependencies {
 
 }
 ext {
-    PUBLISH_GROUP_ID = 'xyz.canardoux'
+    PUBLISH_GROUP_ID = 'com.xproductions'
     PUBLISH_ARTIFACT_ID = 'tau_sound_core'
     PUBLISH_VERSION = android.defaultConfig.versionName // '0.0.2' // project.getProperty(“libraryVersion”)
 }
@@ -112,19 +112,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 // =========================================================================================================================================================
 
 
-afterEvaluate {
-    publishing {
-        publications {
-            // Creates a Maven publication called "release".
-            release(MavenPublication) {
-                //from components.release
-                groupId = 'xyz.canardoux'
-                artifactId = 'tau_sound_core'
-                version = PUBLISH_VERSION
-            }
-        }
-    }
-}
 
 
 
