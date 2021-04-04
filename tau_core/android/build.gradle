@@ -112,6 +112,19 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 // =========================================================================================================================================================
 
 
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                //from components.release
+                groupId = 'com.xproductions'
+                artifactId = 'tau_sound_core'
+                version = PUBLISH_VERSION
+            }
+        }
+    }
+}
 
 
 
