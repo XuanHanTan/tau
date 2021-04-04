@@ -326,9 +326,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     print("flutter sound $state");
     if (state.toString() == "AppLifecycleState.paused") {
       if (_playState == _PlayState.playing) {
-        _player.pausePlayer();
+        _player.stopPlayer();
         setState(() {
-          _playState = _PlayState.paused;
+          _playState = _PlayState.stopped;
         });
       }
     }
@@ -570,9 +570,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
           onSkipBackward: null,
           onSkipForward: null, onPaused: (_) {
         if (_playState == _PlayState.playing) {
-          _player.pausePlayer();
+          _player.stopPlayer();
           setState(() {
-            _playState = _PlayState.paused;
+            _playState = _PlayState.stopped;
           });
         }
       }).then((_) {
