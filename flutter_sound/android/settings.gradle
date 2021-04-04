@@ -1,8 +1,5 @@
 rootProject.name = 'flutter_sound'
 
-gitRepository("https://github.com/XuanHanTan/tau.git") {
-    producesModule("com.xproductions:tau_sound_core")
-}
 // -------------------------------------------------------------------------------------
 // CAUTION: The following instruction is for developping and debugging the Flauto Engine
 // DO NOT INCLUDE THE FOLLOWING LINES IN A REAL APP !!!
