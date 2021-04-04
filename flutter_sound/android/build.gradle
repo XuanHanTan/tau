@@ -21,7 +21,6 @@ rootProject.allprojects {
         google()
         mavenCentral()
         maven { url  "https://dl.bintray.com/larpoux/TauRepo" }
-        maven { url "https://jitpack.io" }
         jcenter()
     }
 }
@@ -59,7 +58,7 @@ dependencies {
     // -------------------------------------------------------------------------------------
     // CAUTION: The following instruction is for developping and debugging the Flauto Engine
     // DO NOT INCLUDE THE FOLLOWING LINE IN A REAL APP !!!
-    compile 'com.github.XuanHanTan:tau:b1e76f7'
+    implementation 'xyz.canardoux:tau_sound_core:8.0.0+2'
     // -------------------------------------------------------------------------------------
 
 }
