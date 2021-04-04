@@ -313,7 +313,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     //Log.d('Hot reload releasing plugin');
     //_player.release();
   }
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // TODO: implement didChangeAppLifecycleState
@@ -386,6 +391,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     stop();
     _stop(supressState: true);
     _player.closeAudioSession();
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
