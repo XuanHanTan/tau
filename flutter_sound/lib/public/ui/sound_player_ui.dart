@@ -318,6 +318,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
+    print("flutter sound $state");
     if (state.toString() == "AppLifecycleState.paused") {
       if (_playState == _PlayState.playing) {
         _player.pausePlayer();
