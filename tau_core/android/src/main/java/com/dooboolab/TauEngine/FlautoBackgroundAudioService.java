@@ -198,7 +198,7 @@ public class FlautoBackgroundAudioService
 				setMediaPlaybackState( PlaybackStateCompat.STATE_PAUSED );
 
 				// Show a notification to handle the media playback
-				showPausedNotification();
+				//showPausedNotification();
 
 				// Stop the service (allow the user to dismiss the notification)
 				stopBackgroundAudioService( false );
@@ -324,7 +324,7 @@ public class FlautoBackgroundAudioService
 		setMediaPlaybackState( PlaybackStateCompat.STATE_PLAYING );
 
 		// Show a notification to handle the media playback
-		showPlayingNotification();
+		//showPlayingNotification();
 
 		// Start the audio player
 		mMediaPlayer.start();
@@ -753,10 +753,10 @@ public class FlautoBackgroundAudioService
 	private void showPlayingNotification()
 	{
 		// The player is playing, then build an action to pause the playback
-		NotificationCompat.Action actionPause = new NotificationCompat.Action( R.drawable.ic_pause, "Pause", MediaButtonReceiver.buildMediaButtonPendingIntent( this, PlaybackStateCompat.ACTION_PLAY_PAUSE ) );
+		//NotificationCompat.Action actionPause = new NotificationCompat.Action( R.drawable.ic_pause, "Pause", MediaButtonReceiver.buildMediaButtonPendingIntent( this, PlaybackStateCompat.ACTION_PLAY_PAUSE ) );
 
 		// Show the notification
-		displayNotification( getApplicationContext(), actionPause );
+		//displayNotification( getApplicationContext(), actionPause );
 
 	}
 
@@ -766,10 +766,10 @@ public class FlautoBackgroundAudioService
 	private void showPausedNotification()
 	{
 		// The player is paused, then build an action to play the playback
-		NotificationCompat.Action actionPlay = new NotificationCompat.Action( R.drawable.ic_play_arrow, "Play", MediaButtonReceiver.buildMediaButtonPendingIntent( this, PlaybackStateCompat.ACTION_PLAY_PAUSE ) );
+		//NotificationCompat.Action actionPlay = new NotificationCompat.Action( R.drawable.ic_play_arrow, "Play", MediaButtonReceiver.buildMediaButtonPendingIntent( this, PlaybackStateCompat.ACTION_PLAY_PAUSE ) );
 
 		// Show the notification
-		displayNotification( getApplicationContext(), actionPlay );
+		//displayNotification( getApplicationContext(), actionPlay );
 	}
 
 	/**
@@ -781,7 +781,7 @@ public class FlautoBackgroundAudioService
 	 * @param action  The main action to display in the notification (play or pause
 	 *                button).
 	 */
-	private void displayNotification( Context context, NotificationCompat.Action action )
+	/*private void displayNotification( Context context, NotificationCompat.Action action )
 	{
 
 		NotificationManager notificationManager = null;
@@ -843,7 +843,7 @@ public class FlautoBackgroundAudioService
 			startForeground( 1, notification );
 
 		}
-	}
+	}*/
 
 	/**
 	 * A tool to download the album art to display in the notification in a
@@ -885,14 +885,14 @@ public class FlautoBackgroundAudioService
 			//NotificationCompat.Action actionPlay = new NotificationCompat.Action( R.drawable.ic_play_arrow, "Play", MediaButtonReceiver.buildMediaButtonPendingIntent( getApplicationContext(), PlaybackStateCompat.ACTION_PLAY_PAUSE ) );
 			//displayNotification( getApplicationContext(), actionPlay );
 
-			if (! mMediaPlayer.isPlaying() )
+			/*if (! mMediaPlayer.isPlaying() )
 			{
 				// Show a notification to handle the media playback
 				showPausedNotification();
 			} else
 			{
 				showPlayingNotification();
-			}
+			}*/
 		}
 	}
 }

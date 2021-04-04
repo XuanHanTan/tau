@@ -72,7 +72,7 @@ public class FlautoMediaStyleHelper {
          * @return A pre-built notification with information from the given media
          *         session.
          */
-        public static NotificationCompat.Builder from(Context context, MediaSessionCompat mediaSession)
+        /*public static NotificationCompat.Builder from(Context context, MediaSessionCompat mediaSession)
         {
                 MediaControllerCompat controller = mediaSession.getController();
 
@@ -113,5 +113,5 @@ public class FlautoMediaStyleHelper {
                 // startForeground(id, builder.build());
 
                 return builder;
-        }
+        }*/
 }
