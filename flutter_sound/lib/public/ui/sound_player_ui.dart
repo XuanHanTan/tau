@@ -80,6 +80,7 @@ class SoundPlayerUI extends StatefulWidget {
   final int? _rectime;
   final double _iconRadius;
   final double _iconSplashRadius;
+  final Function? _whenPlayStart;
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -113,6 +114,7 @@ class SoundPlayerUI extends StatefulWidget {
       SliderThemeData? sliderThemeData,
       int? rectime,
       double iconRadius = 24,
+      Function? whenPlayStart,
       double iconSplashRadius = 20})
       : _onLoad = onLoad,
         _showTitle = showTitle,
@@ -128,6 +130,7 @@ class SoundPlayerUI extends StatefulWidget {
         _sliderThemeData = sliderThemeData,
         _rectime = rectime,
         _iconRadius = iconRadius,
+        _whenPlayStart = whenPlayStart,
         _iconSplashRadius = iconSplashRadius;
 
   ///
@@ -158,6 +161,7 @@ class SoundPlayerUI extends StatefulWidget {
       SliderThemeData? sliderThemeData,
       int? rectime,
       double iconRadius = 24,
+      Function? whenPlayStart,
       double iconSplashRadius = 20})
       : _track = track,
         _showTitle = showTitle,
@@ -172,6 +176,7 @@ class SoundPlayerUI extends StatefulWidget {
         _sliderThemeData = sliderThemeData,
         _rectime = rectime,
         _iconRadius = iconRadius,
+        _whenPlayStart = whenPlayStart,
         _iconSplashRadius = iconSplashRadius;
 
   @override
@@ -188,6 +193,7 @@ class SoundPlayerUI extends StatefulWidget {
         sliderThemeData: _sliderThemeData,
         rectime: _rectime,
         iconRadius: _iconRadius,
+        whenPlayStart: _whenPlayStart,
         iconSplashRadius: _iconSplashRadius);
   }
 }
@@ -227,7 +233,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
   final OnLoad? _onLoad;
 
   final bool? _enabled;
-
+  final Function? _whenPlayStart;
   final Color? _backgroundColor;
   final Color? _accentColor;
   final Color? _iconColor;
@@ -258,6 +264,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
       SliderThemeData? sliderThemeData,
       int? rectime,
       double iconRadius = 24,
+      Function? whenPlayStart,
       double iconSplashRadius = 20})
       : _player = FlutterSoundPlayer(),
         _enabled = enabled,
@@ -270,6 +277,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
         _sliderThemeData = sliderThemeData,
         _rectime = rectime,
         _iconRadius = iconRadius,
+        _whenPlayStart = whenPlayStart,
         _iconSplashRadius = iconSplashRadius,
         _localController = StreamController<PlaybackDisposition>.broadcast() {
     _sliderPosition.position = Duration(seconds: 0);
@@ -577,6 +585,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
         }
       }).then((_) {
         _playState = _PlayState.playing;
+        if (_whenPlayStart != null){
+          _whenPlayStart!();
+        }
       }).catchError((dynamic e) {
         Log.w('Error calling play() ${e.toString()}');
         _playState = _PlayState.stopped;
