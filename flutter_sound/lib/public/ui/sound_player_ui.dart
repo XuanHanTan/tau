@@ -416,7 +416,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
             child: _buildDuration(),
           )),
       _buildPlayButton(),
-      _buildTitle(),
+      //_buildTitle(),
       /*SizedBox(
         height: 49,
         width: 30,
