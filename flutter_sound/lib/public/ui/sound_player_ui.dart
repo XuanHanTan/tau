@@ -585,10 +585,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
         }
       }).then((_) {
         _playState = _PlayState.playing;
-        if (widget._whenPlayStart != null){
-          print("running whenplaystart");
-          widget._whenPlayStart!();
-        }
+        
       }).catchError((dynamic e) {
         Log.w('Error calling play() ${e.toString()}');
         _playState = _PlayState.stopped;
@@ -605,6 +602,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
               });
             });
           });
+        }
+        if (widget._whenPlayStart != null){
+          print("running whenplaystart");
+          widget._whenPlayStart!();
         }
         _loading = false;
         _transitioning = false;
