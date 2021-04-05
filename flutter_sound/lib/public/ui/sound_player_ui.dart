@@ -585,8 +585,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
         }
       }).then((_) {
         _playState = _PlayState.playing;
-        if (_whenPlayStart != null){
-          _whenPlayStart!();
+        if (widget._whenPlayStart != null){
+          print("running whenplaystart");
+          widget._whenPlayStart!();
         }
       }).catchError((dynamic e) {
         Log.w('Error calling play() ${e.toString()}');
