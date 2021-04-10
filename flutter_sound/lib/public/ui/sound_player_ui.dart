@@ -321,12 +321,14 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     //Log.d('Hot reload releasing plugin');
     //_player.release();
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
   }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // TODO: implement didChangeAppLifecycleState
@@ -573,19 +575,25 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
   void _start() async {
     var trck = _track;
     if (trck != null) {
-      await _player.startPlayerFromTrack(trck,
-          whenFinished: _onStopped,
-          onSkipBackward: _onStopped,
-          onSkipForward: _onStopped, onPaused: (_) {
+      await _player.startPlayerFromTrack(trck, whenFinished: _onStopped,
+          onSkipBackward: () {
         if (_playState == _PlayState.playing) {
           _player.stopPlayer();
           setState(() {
             _playState = _PlayState.stopped;
           });
         }
+      }, onSkipForward: () {
+        if (_playState == _PlayState.playing) {
+          _player.stopPlayer();
+          setState(() {
+            _playState = _PlayState.stopped;
+          });
+        }
+      }, onPaused: (_) {
+        _onPlay(context);
       }).then((_) {
         _playState = _PlayState.playing;
-        
       }).catchError((dynamic e) {
         Log.w('Error calling play() ${e.toString()}');
         _playState = _PlayState.stopped;
@@ -603,7 +611,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
             });
           });
         }
-        if (widget._whenPlayStart != null){
+        if (widget._whenPlayStart != null) {
           print("running whenplaystart");
           widget._whenPlayStart!();
         }
