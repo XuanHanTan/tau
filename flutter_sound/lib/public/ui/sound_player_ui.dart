@@ -202,8 +202,7 @@ class SoundPlayerUI extends StatefulWidget {
 
 /// internal state.
 /// @nodoc
-class SoundPlayerUIState extends State<SoundPlayerUI>
-    with WidgetsBindingObserver {
+class SoundPlayerUIState extends State<SoundPlayerUI> {
   final FlutterSoundPlayer _player;
 
   final _sliderPosition = _SliderPosition();
@@ -326,23 +325,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
   void initState() {
     // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // TODO: implement didChangeAppLifecycleState
-    super.didChangeAppLifecycleState(state);
-    print("flutter sound $state");
-    if (state.toString() == "AppLifecycleState.paused") {
-      if (_playState == _PlayState.playing) {
-        _player.stopPlayer();
-        setState(() {
-          _playState = _PlayState.stopped;
-        });
-      }
-    }
-  }
 
   ///
   @override
@@ -401,7 +385,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     stop();
     _stop(supressState: true);
     _player.closeAudioSession();
-    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
