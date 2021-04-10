@@ -577,19 +577,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     if (trck != null) {
       await _player.startPlayerFromTrack(trck, whenFinished: _onStopped,
           onSkipBackward: () {
-        if (_playState == _PlayState.playing) {
-          _player.stopPlayer();
-          setState(() {
-            _playState = _PlayState.stopped;
-          });
-        }
+         _onPlay(context);
       }, onSkipForward: () {
-        if (_playState == _PlayState.playing) {
-          _player.stopPlayer();
-          setState(() {
-            _playState = _PlayState.stopped;
-          });
-        }
+         _onPlay(context);
       }, onPaused: (_) {
         _onPlay(context);
       }).then((_) {
