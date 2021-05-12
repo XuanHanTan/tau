@@ -39,7 +39,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../flutter_sound.dart';
 import '../util/log.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 ///
 typedef OnLoad = Future<Track> Function(BuildContext context);
@@ -394,8 +393,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
     return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-       _buildDuration(),
-       
+      SizedBox(
+          width: _rectime! >= 3600000 ? 80 : 55,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: _buildDuration(),
+          )),
       _buildPlayButton(),
       //_buildTitle(),
       /*SizedBox(
@@ -751,7 +754,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               print("pauseseekpos build $seekPos");
             });
           }
-          return AutoSizeText(
+          return Text(
               //'${positionDate.minute.toString().padLeft(2, '0')}:${positionDate.second.toString().padLeft(2, '0')} / ${durationDate.minute.toString().padLeft(2, '0')}:${durationDate.second.toString().padLeft(2, '0')}',
               _playState == _PlayState.disabled
                   ? (durationDate.inHours > 0
@@ -764,7 +767,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               overflow: TextOverflow.fade,
               style: TextStyle(
                   fontSize: 20,
-                  fontFamily: "Proxima Nova"));
+                  fontFamily: "Proxima Nova",));
         });
   }
 
