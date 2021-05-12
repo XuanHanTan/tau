@@ -396,7 +396,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       SizedBox(
           width: _rectime! >= 3600000 ? 80 : 55,
           child: Align(
-            alignment: Alignment.centerRight,
+            alignment: Alignment.center,
             child: _buildDuration(),
           )),
       _buildPlayButton(),
