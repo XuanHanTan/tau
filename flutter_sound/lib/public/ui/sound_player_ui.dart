@@ -34,6 +34,7 @@
 library ui_player;
 
 import 'dart:async';
+import 'dart:ui';
 //import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -326,7 +327,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     super.initState();
   }
 
-
   ///
   @override
   Widget build(BuildContext context) {
@@ -393,12 +393,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
     return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      SizedBox(
-          width: _rectime! >= 3600000 ? 80 : 55,
-          child: Align(
-            alignment: Alignment.center,
-            child: _buildDuration(),
-          )),
+      _buildDuration(),
+
       _buildPlayButton(),
       //_buildTitle(),
       /*SizedBox(
@@ -559,9 +555,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     if (trck != null) {
       await _player.startPlayerFromTrack(trck, whenFinished: _onStopped,
           onSkipBackward: () {
-         _onPlay(context);
+        _onPlay(context);
       }, onSkipForward: () {
-         _onPlay(context);
+        _onPlay(context);
       }, onPaused: (_) {
         _onPlay(context);
       }).then((_) {
@@ -766,8 +762,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               maxLines: 1,
               overflow: TextOverflow.fade,
               style: TextStyle(
-                  fontSize: 20,
-                  fontFamily: "Proxima Nova",));
+                fontSize: 20,
+                fontFamily: "Proxima Nova",
+                fontFeatures: [FontFeature.tabularFigures()],
+              ));
         });
   }
 
