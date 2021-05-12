@@ -394,12 +394,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
     if (widget._showTitle && _track != null) rows.add(_buildTitle());
 
     return Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      SizedBox(
-          width: _rectime! >= 3600000 ? 80 : 55,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: _buildDuration(),
-          )),
+       _buildDuration(),
+       
       _buildPlayButton(),
       //_buildTitle(),
       /*SizedBox(
@@ -768,8 +764,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               overflow: TextOverflow.fade,
               style: TextStyle(
                   fontSize: 20,
-                  fontFamily: "Proxima Nova",
-                  fontWeight: FontWeight.bold));
+                  fontFamily: "Proxima Nova"));
         });
   }
 
