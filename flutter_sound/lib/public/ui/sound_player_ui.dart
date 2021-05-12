@@ -764,6 +764,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               style: TextStyle(
                 fontSize: 20,
                 fontFamily: "Proxima Nova",
+                fontWeight: FontWeight.bold,
                 fontFeatures: [FontFeature.tabularFigures()],
               ));
         });
