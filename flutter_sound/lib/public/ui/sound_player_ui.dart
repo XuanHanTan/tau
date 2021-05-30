@@ -82,6 +82,7 @@ class SoundPlayerUI extends StatefulWidget {
   final double _iconSplashRadius;
   final Function? _whenPlayStart;
   final Color _textColor;
+  final Color _darkTextColor;
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -116,7 +117,7 @@ class SoundPlayerUI extends StatefulWidget {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20, Color textColor = Colors.black, Color darkTextColor = Colors.white})
       : _onLoad = onLoad,
         _showTitle = showTitle,
         _track = null,
@@ -133,7 +134,8 @@ class SoundPlayerUI extends StatefulWidget {
         _iconRadius = iconRadius,
         _whenPlayStart = whenPlayStart,
         _iconSplashRadius = iconSplashRadius,
-        _textColor = textColor;
+        _textColor = textColor,
+        _darkTextColor = darkTextColor;
 
   ///
   /// [SoundPlayerUI.fromTrack] Constructs a Playbar with a Track.
@@ -164,7 +166,7 @@ class SoundPlayerUI extends StatefulWidget {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20, Color textColor = Colors.black, Color darkTextColor = Colors.white})
       : _track = track,
         _showTitle = showTitle,
         _onLoad = null,
@@ -180,7 +182,8 @@ class SoundPlayerUI extends StatefulWidget {
         _iconRadius = iconRadius,
         _whenPlayStart = whenPlayStart,
         _iconSplashRadius = iconSplashRadius,
-        _textColor = textColor;
+        _textColor = textColor,
+        _darkTextColor = darkTextColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -197,7 +200,7 @@ class SoundPlayerUI extends StatefulWidget {
         rectime: _rectime,
         iconRadius: _iconRadius,
         whenPlayStart: _whenPlayStart,
-        iconSplashRadius: _iconSplashRadius, textColor: _textColor);
+        iconSplashRadius: _iconSplashRadius, textColor: _textColor, darkTextColor: _darkTextColor);
   }
 }
 
@@ -254,6 +257,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   final double _iconRadius;
   final double _iconSplashRadius;
   final Color _textColor;
+  final Color _darkTextColor;
 
   ///
   SoundPlayerUIState(this._track, this._onLoad,
@@ -268,7 +272,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20, Color textColor = Colors.black, Color darkTextColor = Colors.white})
       : _player = FlutterSoundPlayer(),
         _enabled = enabled,
         _backgroundColor = backgroundColor,
@@ -283,6 +287,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _whenPlayStart = whenPlayStart,
         _iconSplashRadius = iconSplashRadius,
         _textColor = textColor,
+        _darkTextColor = darkTextColor,
         _localController = StreamController<PlaybackDisposition>.broadcast() {
     _sliderPosition.position = Duration(seconds: 0);
     _sliderPosition.maxPosition = Duration(milliseconds: _rectime!);
@@ -699,7 +704,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                       }
 
                       return Material(
-                          color: _backgroundColor,
+                          color: Colors.transparent,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(28.0)),
                           child: InkWell(
@@ -725,7 +730,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   Widget _buildPlayButtonIcon(Widget? widget) {
     return Icon(_player.isStopped ? Icons.play_arrow : Icons.pause,
-        color: _textColor);
+        color: MediaQuery.of(context).platformBrightness == Brightness.dark ? _darkTextColor: _textColor);
   }
 
   Widget _buildDuration() {
