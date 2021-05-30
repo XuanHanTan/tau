@@ -699,7 +699,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                       }
 
                       return Material(
-                          color: _backgroundColor,
+                          color: Colors.transparent,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(28.0)),
                           child: InkWell(
