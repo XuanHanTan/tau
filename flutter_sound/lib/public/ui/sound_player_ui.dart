@@ -81,6 +81,7 @@ class SoundPlayerUI extends StatefulWidget {
   final double _iconRadius;
   final double _iconSplashRadius;
   final Function? _whenPlayStart;
+  final Color _textColor;
 
 // -----------------------------------------------------------------------------------------------------------
 
@@ -115,7 +116,7 @@ class SoundPlayerUI extends StatefulWidget {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20})
+      double iconSplashRadius = 20, Color textColor = Colors.black})
       : _onLoad = onLoad,
         _showTitle = showTitle,
         _track = null,
@@ -131,7 +132,8 @@ class SoundPlayerUI extends StatefulWidget {
         _rectime = rectime,
         _iconRadius = iconRadius,
         _whenPlayStart = whenPlayStart,
-        _iconSplashRadius = iconSplashRadius;
+        _iconSplashRadius = iconSplashRadius,
+        _textColor = textColor;
 
   ///
   /// [SoundPlayerUI.fromTrack] Constructs a Playbar with a Track.
@@ -162,7 +164,7 @@ class SoundPlayerUI extends StatefulWidget {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20})
+      double iconSplashRadius = 20, Color textColor = Colors.black})
       : _track = track,
         _showTitle = showTitle,
         _onLoad = null,
@@ -177,7 +179,8 @@ class SoundPlayerUI extends StatefulWidget {
         _rectime = rectime,
         _iconRadius = iconRadius,
         _whenPlayStart = whenPlayStart,
-        _iconSplashRadius = iconSplashRadius;
+        _iconSplashRadius = iconSplashRadius,
+        _textColor = textColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -194,7 +197,7 @@ class SoundPlayerUI extends StatefulWidget {
         rectime: _rectime,
         iconRadius: _iconRadius,
         whenPlayStart: _whenPlayStart,
-        iconSplashRadius: _iconSplashRadius);
+        iconSplashRadius: _iconSplashRadius, textColor: _textColor);
   }
 }
 
@@ -250,6 +253,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   final int? _rectime;
   final double _iconRadius;
   final double _iconSplashRadius;
+  final Color _textColor;
 
   ///
   SoundPlayerUIState(this._track, this._onLoad,
@@ -264,7 +268,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20})
+      double iconSplashRadius = 20, Color textColor = Colors.black})
       : _player = FlutterSoundPlayer(),
         _enabled = enabled,
         _backgroundColor = backgroundColor,
@@ -278,6 +282,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _iconRadius = iconRadius,
         _whenPlayStart = whenPlayStart,
         _iconSplashRadius = iconSplashRadius,
+        _textColor = textColor,
         _localController = StreamController<PlaybackDisposition>.broadcast() {
     _sliderPosition.position = Duration(seconds: 0);
     _sliderPosition.maxPosition = Duration(milliseconds: _rectime!);
@@ -720,7 +725,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   Widget _buildPlayButtonIcon(Widget? widget) {
     return Icon(_player.isStopped ? Icons.play_arrow : Icons.pause,
-        color: Colors.white);
+        color: _textColor);
   }
 
   Widget _buildDuration() {
@@ -766,6 +771,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
                 fontFamily: "Proxima Nova",
                 fontWeight: FontWeight.bold,
                 fontFeatures: [FontFeature.tabularFigures()],
+                color: _textColor
               ));
         });
   }
