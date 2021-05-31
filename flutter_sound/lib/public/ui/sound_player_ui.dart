@@ -368,7 +368,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
       /// the disabled state.
       if (_playState != _PlayState.disabled) {
         _playState = _PlayState.stopped;
-        playButtonAnimationController!.forward();
+        playButtonAnimationController!.reverse();
       }
     });
   }
@@ -452,10 +452,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     setState(() {
       if (enabled == true) {
         __playState = _PlayState.stopped;
-        playButtonAnimationController!.forward();
+        playButtonAnimationController!.reverse();
       } else if (enabled == false) {
         __playState = _PlayState.disabled;
-        playButtonAnimationController!.forward();
+        playButtonAnimationController!.reverse();
       }
     });
   }
@@ -495,7 +495,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
       _transitioning = true;
       _playState = _PlayState.playing;
     });
-    playButtonAnimationController!.reverse();
+    playButtonAnimationController!.forward();
 
     _player
         .resumePlayer()
@@ -503,7 +503,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
         .catchError((dynamic e) {
       Log.w('Error calling resume ${e.toString()}');
       _playState = _PlayState.stopped;
-      playButtonAnimationController!.forward();
+      playButtonAnimationController!.reverse();
       _player.stopPlayer();
       return false;
     }).whenComplete(() => _transitioning = false);
@@ -516,7 +516,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
       _transitioning = true;
       _playState = _PlayState.paused;
     });
-    playButtonAnimationController!.forward();
+    playButtonAnimationController!.reverse();
 
     _player
         .pausePlayer()
@@ -524,7 +524,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
         .catchError((dynamic e) {
       Log.w('Error calling pause ${e.toString()}');
       _playState = _PlayState.stopped;
-      playButtonAnimationController!.forward();
+      playButtonAnimationController!.reverse();
       _player.stopPlayer();
       return false;
     }).whenComplete(() => _transitioning = false);
@@ -582,11 +582,11 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
         _onPlay(context);
       }).then((_) {
         _playState = _PlayState.playing;
-        playButtonAnimationController!.reverse();
+        playButtonAnimationController!.forward();
       }).catchError((dynamic e) {
         Log.w('Error calling play() ${e.toString()}');
         _playState = _PlayState.stopped;
-        playButtonAnimationController!.forward();
+        playButtonAnimationController!.reverse();
 
         return null;
       }).whenComplete(() async {
@@ -635,12 +635,12 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
     // if called via dispose we can't trigger setState.
     if (supressState) {
       __playState = _PlayState.stopped;
-      playButtonAnimationController!.forward();
+      playButtonAnimationController!.reverse();
       __transitioning = false;
       __loading = false;
     } else {
       _playState = _PlayState.stopped;
-      playButtonAnimationController!.forward();
+      playButtonAnimationController!.reverse();
       _transitioning = false;
       _loading = false;
     }
@@ -744,7 +744,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
 
   Widget _buildPlayButtonIcon(Widget? widget) {
     return AnimatedIcon(
-        icon: AnimatedIcons.pause_play,
+        icon: AnimatedIcons.play_pause,
         progress: playButtonAnimationController!,
         color: _textColor);
   }
