@@ -345,7 +345,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
   Widget build(BuildContext context) {
     registerPlayer(context, this);
     //
-    return _buildPlayBar();
+    return ChangeNotifierProvider<_SliderPosition>(
+        create: (_) => _sliderPosition, child: _buildPlayBar());
   }
 
   void _setCallbacks() {
@@ -817,9 +818,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
   Widget _buildSlider() {
     return Expanded(
         child: PlaybarSlider(_localController.stream, (position) {
-      setState(() {
         _sliderPosition.position = position;
-      });
       if (_player.isPlaying || _player.isPaused) {
         _player.seekToPlayer(position);
       } else {
