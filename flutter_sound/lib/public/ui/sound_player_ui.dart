@@ -288,10 +288,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
         _iconSplashRadius = iconSplashRadius,
         _textColor = textColor,
         _localController = StreamController<PlaybackDisposition>.broadcast() {
-    setState(() {
+
       _sliderPosition.position = Duration(seconds: 0);
     _sliderPosition.maxPosition = Duration(milliseconds: _rectime!);
-    });
+
     if (!_enabled!) {
       __playState = _PlayState.disabled;
     }
