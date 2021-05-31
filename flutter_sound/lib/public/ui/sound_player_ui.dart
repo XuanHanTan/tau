@@ -396,7 +396,6 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
   @override
   void dispose() {
     print('stopping Player on dispose');
-    stop();
     _stop(supressState: true);
     playButtonAnimationController!.dispose();
     _player.closeAudioSession();
