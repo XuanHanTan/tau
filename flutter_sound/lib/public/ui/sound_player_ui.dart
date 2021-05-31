@@ -116,7 +116,8 @@ class SoundPlayerUI extends StatelessWidget {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20,
+      Color textColor = Colors.black})
       : _onLoad = onLoad,
         _showTitle = showTitle,
         _track = null,
@@ -164,7 +165,8 @@ class SoundPlayerUI extends StatelessWidget {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20,
+      Color textColor = Colors.black})
       : _track = track,
         _showTitle = showTitle,
         _onLoad = null,
@@ -186,28 +188,28 @@ class SoundPlayerUI extends StatelessWidget {
     // TODO: implement build
     return MaterialApp(
       home: SoundPlayerUIPage(_onLoad,
-        enabled: _enabled,
-        backgroundColor:
-            (_backgroundColor != null) ? _backgroundColor : Color(0xFFFAF0E6),
-        accentColor: _accentColor ?? Color(0xFFFAF0E6),
-        iconColor: _iconColor,
-        disabledIconColor: _disabledIconColor,
-        textStyle: _textStyle,
-        titleStyle: _titleStyle,
-        sliderThemeData: _sliderThemeData,
-        rectime: _rectime,
-        iconRadius: _iconRadius,
-        whenPlayStart: _whenPlayStart,
-        iconSplashRadius: _iconSplashRadius, textColor: _textColor),
+          enabled: _enabled,
+          backgroundColor:
+              (_backgroundColor != null) ? _backgroundColor : Color(0xFFFAF0E6),
+          accentColor: _accentColor ?? Color(0xFFFAF0E6),
+          iconColor: _iconColor,
+          disabledIconColor: _disabledIconColor,
+          textStyle: _textStyle,
+          titleStyle: _titleStyle,
+          sliderThemeData: _sliderThemeData,
+          rectime: _rectime,
+          iconRadius: _iconRadius,
+          whenPlayStart: _whenPlayStart,
+          iconSplashRadius: _iconSplashRadius,
+          textColor: _textColor),
     );
   }
-  
 }
 
 // ------------------------------------------------------------------------------------------------------------------
 /// internal state.
 /// @nodoc
-class SoundPlayerUIPage extends StatefulWidget{
+class SoundPlayerUIPage extends StatefulWidget {
   static const Codec standardCodec = Codec.aacADTS;
   static const int _barHeight = 60;
 
@@ -229,8 +231,7 @@ class SoundPlayerUIPage extends StatefulWidget{
   final double _iconSplashRadius;
   final Function? _whenPlayStart;
   final Color _textColor;
-  SoundPlayerUIPage(
-    OnLoad? onLoad,
+  SoundPlayerUIPage(OnLoad? onLoad,
       {bool showTitle = false,
       bool enabled = true,
       AudioFocus audioFocus = AudioFocus.requestFocusAndKeepOthers,
@@ -244,7 +245,8 @@ class SoundPlayerUIPage extends StatefulWidget{
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20,
+      Color textColor = Colors.black})
       : _onLoad = onLoad,
         _showTitle = showTitle,
         _track = null,
@@ -263,7 +265,6 @@ class SoundPlayerUIPage extends StatefulWidget{
         _iconSplashRadius = iconSplashRadius,
         _textColor = textColor;
 
-
   @override
   State<StatefulWidget> createState() {
     return SoundPlayerUIState(_track, _onLoad,
@@ -279,12 +280,15 @@ class SoundPlayerUIPage extends StatefulWidget{
         rectime: _rectime,
         iconRadius: _iconRadius,
         whenPlayStart: _whenPlayStart,
-        iconSplashRadius: _iconSplashRadius, textColor: _textColor);
+        iconSplashRadius: _iconSplashRadius,
+        textColor: _textColor);
   }
 }
+
 /// internal state.
 /// @nodoc
-class SoundPlayerUIState extends State<SoundPlayerUIPage> {
+class SoundPlayerUIState extends State<SoundPlayerUIPage>
+    with TickerProviderStateMixin {
   final FlutterSoundPlayer _player;
 
   final _sliderPosition = _SliderPosition();
@@ -320,7 +324,7 @@ class SoundPlayerUIState extends State<SoundPlayerUIPage> {
   final Color? _iconColor;
 
   final Color? _disabledIconColor;
-
+  AnimationController? playButtonAnimationController;
   final TextStyle? _textStyle;
 
   final TextStyle? _titleStyle;
@@ -347,7 +351,8 @@ class SoundPlayerUIState extends State<SoundPlayerUIPage> {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20,
+      Color textColor = Colors.black})
       : _player = FlutterSoundPlayer(),
         _enabled = enabled,
         _backgroundColor = backgroundColor,
@@ -409,14 +414,18 @@ class SoundPlayerUIState extends State<SoundPlayerUIPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    playButtonAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
   }
 
   ///
   @override
   Widget build(BuildContext context) {
     registerPlayer(context, this);
-    return MediaQuery(data: MediaQuery.of(context), child: ChangeNotifierProvider<_SliderPosition>(
-        create: (_) => _sliderPosition, child: _buildPlayBar()));
+    return MediaQuery(
+        data: MediaQuery.of(context),
+        child: ChangeNotifierProvider<_SliderPosition>(
+            create: (_) => _sliderPosition, child: _buildPlayBar()));
   }
 
   void _setCallbacks() {
@@ -803,7 +812,9 @@ class SoundPlayerUIState extends State<SoundPlayerUIPage> {
   }
 
   Widget _buildPlayButtonIcon(Widget? widget) {
-    return Icon(_player.isStopped ? Icons.play_arrow : Icons.pause,
+    return AnimatedIcon(
+        icon: AnimatedIcons.play_pause,
+        progress: playButtonAnimationController!,
         color: _textColor);
   }
 
@@ -846,12 +857,11 @@ class SoundPlayerUIState extends State<SoundPlayerUIPage> {
               maxLines: 1,
               overflow: TextOverflow.fade,
               style: TextStyle(
-                fontSize: 20,
-                fontFamily: "Proxima Nova",
-                fontWeight: FontWeight.bold,
-                fontFeatures: [FontFeature.tabularFigures()],
-                color: _textColor
-              ));
+                  fontSize: 20,
+                  fontFamily: "Proxima Nova",
+                  fontWeight: FontWeight.bold,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                  color: _textColor));
         });
   }
 
