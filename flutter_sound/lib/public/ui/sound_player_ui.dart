@@ -67,7 +67,6 @@ class SoundPlayerUI extends StatefulWidget {
   final OnLoad? _onLoad;
   final Track? _track;
   final bool _showTitle;
-
   final bool _enabled;
 
   final Color? _backgroundColor;
@@ -116,7 +115,8 @@ class SoundPlayerUI extends StatefulWidget {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20,
+      Color textColor = Colors.black})
       : _onLoad = onLoad,
         _showTitle = showTitle,
         _track = null,
@@ -164,7 +164,8 @@ class SoundPlayerUI extends StatefulWidget {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20,
+      Color textColor = Colors.black})
       : _track = track,
         _showTitle = showTitle,
         _onLoad = null,
@@ -197,7 +198,8 @@ class SoundPlayerUI extends StatefulWidget {
         rectime: _rectime,
         iconRadius: _iconRadius,
         whenPlayStart: _whenPlayStart,
-        iconSplashRadius: _iconSplashRadius, textColor: _textColor);
+        iconSplashRadius: _iconSplashRadius,
+        textColor: _textColor);
   }
 }
 
@@ -205,7 +207,8 @@ class SoundPlayerUI extends StatefulWidget {
 
 /// internal state.
 /// @nodoc
-class SoundPlayerUIState extends State<SoundPlayerUI> {
+class SoundPlayerUIState extends State<SoundPlayerUI>
+    with TickerProviderStateMixin {
   final FlutterSoundPlayer _player;
 
   final _sliderPosition = _SliderPosition();
@@ -233,7 +236,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   Track? _track;
   Duration? seekPos;
   final OnLoad? _onLoad;
-
+  AnimationController? playButtonAnimationController;
   final bool? _enabled;
   final Function? _whenPlayStart;
   final Color? _backgroundColor;
@@ -268,7 +271,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
       int? rectime,
       double iconRadius = 24,
       Function? whenPlayStart,
-      double iconSplashRadius = 20, Color textColor = Colors.black})
+      double iconSplashRadius = 20,
+      Color textColor = Colors.black})
       : _player = FlutterSoundPlayer(),
         _enabled = enabled,
         _backgroundColor = backgroundColor,
@@ -284,8 +288,10 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
         _iconSplashRadius = iconSplashRadius,
         _textColor = textColor,
         _localController = StreamController<PlaybackDisposition>.broadcast() {
-    _sliderPosition.position = Duration(seconds: 0);
+    setState(() {
+      _sliderPosition.position = Duration(seconds: 0);
     _sliderPosition.maxPosition = Duration(milliseconds: _rectime!);
+    });
     if (!_enabled!) {
       __playState = _PlayState.disabled;
     }
@@ -330,14 +336,15 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    playButtonAnimationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
   }
 
   ///
   @override
   Widget build(BuildContext context) {
     registerPlayer(context, this);
-    return ChangeNotifierProvider<_SliderPosition>(
-        create: (_) => _sliderPosition, child: _buildPlayBar());
+    return _buildPlayBar();
   }
 
   void _setCallbacks() {
@@ -724,7 +731,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   }
 
   Widget _buildPlayButtonIcon(Widget? widget) {
-    return Icon(_player.isStopped ? Icons.play_arrow : Icons.pause,
+    return AnimatedIcon(
+        icon: AnimatedIcons.play_pause,
+        progress: playButtonAnimationController!,
         color: _textColor);
   }
 
@@ -767,12 +776,11 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
               maxLines: 1,
               overflow: TextOverflow.fade,
               style: TextStyle(
-                fontSize: 20,
-                fontFamily: "Proxima Nova",
-                fontWeight: FontWeight.bold,
-                fontFeatures: [FontFeature.tabularFigures()],
-                color: _textColor
-              ));
+                  fontSize: 20,
+                  fontFamily: "Proxima Nova",
+                  fontWeight: FontWeight.bold,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                  color: _textColor));
         });
   }
 
@@ -797,7 +805,9 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   Widget _buildSlider() {
     return Expanded(
         child: PlaybarSlider(_localController.stream, (position) {
-      _sliderPosition.position = position;
+      setState(() {
+        _sliderPosition.position = position;
+      });
       if (_player.isPlaying || _player.isPaused) {
         _player.seekToPlayer(position);
       } else {
