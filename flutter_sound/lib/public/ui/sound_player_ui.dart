@@ -58,7 +58,7 @@ typedef OnLoad = Future<Track> Function(BuildContext context);
 /// -----------------------------------------------------------------
 ///
 
-class SoundPlayerUI extends StatefulWidget {
+class SoundPlayerUI extends StatelessWidget {
   /// only codec support by android unless we have a minSdk of 29
   /// then OGG_VORBIS and OPUS are supported.
   static const Codec standardCodec = Codec.aacADTS;
@@ -181,6 +181,88 @@ class SoundPlayerUI extends StatefulWidget {
         _whenPlayStart = whenPlayStart,
         _iconSplashRadius = iconSplashRadius,
         _textColor = textColor;
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+      home: SoundPlayerUIPage(_onLoad,
+        enabled: _enabled,
+        backgroundColor:
+            (_backgroundColor != null) ? _backgroundColor : Color(0xFFFAF0E6),
+        accentColor: _accentColor ?? Color(0xFFFAF0E6),
+        iconColor: _iconColor,
+        disabledIconColor: _disabledIconColor,
+        textStyle: _textStyle,
+        titleStyle: _titleStyle,
+        sliderThemeData: _sliderThemeData,
+        rectime: _rectime,
+        iconRadius: _iconRadius,
+        whenPlayStart: _whenPlayStart,
+        iconSplashRadius: _iconSplashRadius, textColor: _textColor),
+    );
+  }
+  
+}
+
+// ------------------------------------------------------------------------------------------------------------------
+/// internal state.
+/// @nodoc
+class SoundPlayerUIPage extends StatefulWidget{
+  static const Codec standardCodec = Codec.aacADTS;
+  static const int _barHeight = 60;
+
+  final OnLoad? _onLoad;
+  final Track? _track;
+  final bool _showTitle;
+
+  final bool _enabled;
+
+  final Color? _backgroundColor;
+  final Color? _accentColor;
+  final Color _iconColor;
+  final Color _disabledIconColor;
+  final TextStyle? _textStyle;
+  final TextStyle? _titleStyle;
+  final SliderThemeData? _sliderThemeData;
+  final int? _rectime;
+  final double _iconRadius;
+  final double _iconSplashRadius;
+  final Function? _whenPlayStart;
+  final Color _textColor;
+  SoundPlayerUIPage(
+    OnLoad? onLoad,
+      {bool showTitle = false,
+      bool enabled = true,
+      AudioFocus audioFocus = AudioFocus.requestFocusAndKeepOthers,
+      Color? backgroundColor,
+      Color? accentColor,
+      Color iconColor = Colors.black,
+      Color disabledIconColor = Colors.grey,
+      TextStyle? textStyle,
+      TextStyle? titleStyle,
+      SliderThemeData? sliderThemeData,
+      int? rectime,
+      double iconRadius = 24,
+      Function? whenPlayStart,
+      double iconSplashRadius = 20, Color textColor = Colors.black})
+      : _onLoad = onLoad,
+        _showTitle = showTitle,
+        _track = null,
+        _enabled = enabled,
+        _backgroundColor =
+            (backgroundColor == null) ? Color(0xFFFAF0E6) : backgroundColor,
+        _accentColor = accentColor ?? Color(0xFFFAF0E6),
+        _iconColor = iconColor,
+        _disabledIconColor = disabledIconColor,
+        _textStyle = textStyle,
+        _titleStyle = titleStyle,
+        _sliderThemeData = sliderThemeData,
+        _rectime = rectime,
+        _iconRadius = iconRadius,
+        _whenPlayStart = whenPlayStart,
+        _iconSplashRadius = iconSplashRadius,
+        _textColor = textColor;
+
 
   @override
   State<StatefulWidget> createState() {
@@ -200,12 +282,9 @@ class SoundPlayerUI extends StatefulWidget {
         iconSplashRadius: _iconSplashRadius, textColor: _textColor);
   }
 }
-
-// ------------------------------------------------------------------------------------------------------------------
-
 /// internal state.
 /// @nodoc
-class SoundPlayerUIState extends State<SoundPlayerUI> {
+class SoundPlayerUIState extends State<SoundPlayerUIPage> {
   final FlutterSoundPlayer _player;
 
   final _sliderPosition = _SliderPosition();
@@ -336,8 +415,8 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
   @override
   Widget build(BuildContext context) {
     registerPlayer(context, this);
-    return ChangeNotifierProvider<_SliderPosition>(
-        create: (_) => _sliderPosition, child: _buildPlayBar());
+    return MediaQuery(data: MediaQuery.of(context), child: ChangeNotifierProvider<_SliderPosition>(
+        create: (_) => _sliderPosition, child: _buildPlayBar()));
   }
 
   void _setCallbacks() {
