@@ -344,6 +344,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
   @override
   Widget build(BuildContext context) {
     registerPlayer(context, this);
+    //
     return _buildPlayBar();
   }
 
