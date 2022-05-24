@@ -39,7 +39,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../flutter_sound.dart';
-import '../util/log.dart';
 
 ///
 typedef OnLoad = Future<Track> Function(BuildContext context);
@@ -769,7 +768,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
           if ((_playState == _PlayState.paused ||
                   _playState == _PlayState.stopped) &&
               seekPos == null) {
-            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
               setState(() {
                 seekPos = disposition.position;
               });
@@ -821,7 +820,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI>
       if (_player.isPlaying || _player.isPaused) {
         _player.seekToPlayer(position);
       } else {
-        WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           setState(() {
             seekPos = position;
           });
